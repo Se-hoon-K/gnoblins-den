@@ -7,8 +7,9 @@ interface Props {
   size?: number; // px
   rotate?: number; // deg
   hideSmall?: boolean; // hide under 600px to keep phones uncluttered
+  sit?: boolean; // y is measured from the bottom, so the prop sits on a surface
 }
-const { name, x, y, size = 72, rotate = 0, hideSmall = false } = Astro.props;
+const { name, x, y, size = 72, rotate = 0, hideSmall = false, sit = false } = Astro.props;
 ---
 
 <img
@@ -18,5 +19,5 @@ const { name, x, y, size = 72, rotate = 0, hideSmall = false } = Astro.props;
   width={size}
   height={size}
   loading="lazy"
-  style={`left:${x};top:${y};width:${size}px;--r:${rotate}deg`}
+  style={`left:${x};${sit ? 'bottom' : 'top'}:${y};width:${size}px;--r:${rotate}deg`}
 />

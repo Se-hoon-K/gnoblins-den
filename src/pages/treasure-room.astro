@@ -13,16 +13,32 @@ import { games } from '../data/games';
         <p class="lede ink-note">Every game we've dug up so far. Handle with care. Some of them bite.</p>
       </header>
 
-      <!-- The hoard: a crooked shelf of junk, floating bits, a heap of gold. All placeholder props. -->
+      <!-- The hoard: a mossy shelf (candle, skull, a lot of mushrooms), floating bits, a heap of gold.
+           All placeholder props. -->
       <div class="shelf" aria-hidden="true">
-        <Prop name="candle" x="4%" y="8px" size={70} />
-        <Prop name="skull-mug" x="16%" y="14px" size={64} rotate={-6} />
-        <Prop name="potion-magenta" x="30%" y="6px" size={72} rotate={4} hideSmall />
-        <Prop name="cassette" x="46%" y="26px" size={56} rotate={-10} hideSmall />
-        <Prop name="lantern" x="62%" y="2px" size={76} hideSmall />
-        <Prop name="scroll" x="77%" y="22px" size={58} rotate={12} />
-        <Prop name="bone" x="88%" y="30px" size={50} rotate={-30} hideSmall />
+        <Prop name="mushroom-tiny" x="0%" y="6px" size={50} sit />
+        <Prop name="candle" x="5%" y="10px" size={84} sit />
+        <Prop name="mushroom-cluster" x="15%" y="6px" size={78} sit />
+        <Prop name="skull" x="26%" y="8px" size={76} rotate={-4} sit />
+        <Prop name="mushroom-tall" x="36%" y="6px" size={92} sit hideSmall />
+        <Prop name="mushroom-tiny" x="45%" y="6px" size={52} sit hideSmall />
+        <Prop name="mushroom-acid" x="52%" y="6px" size={72} sit />
+        <Prop name="mushroom-cluster" x="62%" y="6px" size={86} sit hideSmall />
+        <Prop name="mushroom-magenta" x="73%" y="6px" size={66} sit hideSmall />
+        <Prop name="mushroom-tall" x="81%" y="6px" size={80} sit />
+        <Prop name="mushroom-tiny" x="91%" y="6px" size={54} sit hideSmall />
         <div class="plank"></div>
+        <svg class="moss" viewBox="0 0 1000 70" preserveAspectRatio="none">
+          <path
+            d="M0 20 C30 6 50 18 80 10 C110 2 130 18 170 12 C210 4 230 16 270 10 C310 2 340 18 380 12 C420 6 450 16 490 8 C530 2 560 18 600 12 C640 6 670 16 710 10 C750 2 780 18 820 12 C860 6 890 16 930 10 C960 6 980 14 1000 12 V34 C980 40 960 56 950 34 C930 40 900 34 880 36 C860 44 850 66 836 36 C800 40 760 34 720 36 C700 42 690 58 676 36 C640 40 600 34 560 36 C540 44 532 62 520 36 C480 40 440 34 400 36 C380 40 372 54 360 36 C320 40 280 34 240 36 C220 44 212 64 198 36 C160 40 120 34 80 36 C60 42 54 56 44 36 C30 38 12 34 0 34Z"
+            fill="#3f6b1f"
+            stroke="#121014"
+            stroke-width="4"
+            stroke-linejoin="round"
+          />
+          <path d="M40 16 q10 -6 20 0 M220 14 q12 -8 24 0 M430 12 q10 -6 20 0 M640 14 q12 -8 24 0 M880 14 q10 -6 20 0" stroke="#86c43a" stroke-width="5" fill="none" stroke-linecap="round" />
+          <g fill="#b6ff2e"><circle cx="120" cy="22" r="2.5" /><circle cx="330" cy="20" r="2" /><circle cx="560" cy="24" r="2.5" /><circle cx="770" cy="20" r="2" /><circle cx="950" cy="22" r="2.5" /></g>
+        </svg>
       </div>
 
       <div class="hoard-float" aria-hidden="true">

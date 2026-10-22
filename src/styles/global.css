@@ -292,8 +292,9 @@ img { max-width: 100%; display: block; }
 .room-head .lede { margin-top: 16px; }
 
 /* ---------- Treasure Room ---------- */
-.shelf { position: relative; height: 110px; margin: 0 4% 56px; rotate: -1.5deg; }
-.shelf .prop { z-index: 1; }
+.shelf { position: relative; height: 140px; margin: 0 4% 64px; rotate: -1.5deg; }
+.shelf .prop { z-index: 1; margin-bottom: 16px; }
+.moss { position: absolute; z-index: 2; left: -1%; width: 102%; height: 54px; bottom: -16px; filter: url(#ink); overflow: visible; }
 .plank {
   position: absolute; left: 0; right: 0; bottom: 0; height: 18px;
   background: repeating-linear-gradient(90deg, transparent 0 60px, #00000030 60px 63px), linear-gradient(180deg, #8a5a32, #5a3a1f);
