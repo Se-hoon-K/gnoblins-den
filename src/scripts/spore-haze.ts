@@ -1,5 +1,6 @@
 // Spore haze: neon smoke (WebGL2 stable fluids) + glowing spore specks (2D canvas)
-// that the cursor stirs. Colours come from --haze-1..4, --haze-strength and --bg on <body>.
+// that the cursor stirs. Colours and behaviour come from --haze-* custom properties on <body>
+// (defaults in global.css :root, per-game overrides in src/data/games.ts).
 // Reduced motion or no WebGL2 => canvases removed, the static CSS backdrop shows instead.
 
 const fluidCanvas = document.querySelector<HTMLCanvasElement>('.haze-fluid');
@@ -15,10 +16,28 @@ const hex = (v: string): RGB => {
 
 function readTheme() {
   const cs = getComputedStyle(document.body);
+  const n = (name: string, fallback: number) => {
+    const v = parseFloat(cs.getPropertyValue(`--haze-${name}`));
+    return Number.isFinite(v) ? v : fallback;
+  };
   return {
     palette: [1, 2, 3, 4].map((i) => hex(cs.getPropertyValue(`--haze-${i}`) || '#ffffff')),
     bg: hex(cs.getPropertyValue('--bg') || '#0d0b12'),
-    strength: parseFloat(cs.getPropertyValue('--haze-strength')) || 1,
+    strength: n('strength', 1),
+    curl: n('curl', 22), // swirliness
+    fade: n('fade', 0.35), // how fast smoke disappears
+    radius: n('radius', 0.3), // splat size
+    mouseDye: n('mouse-dye', 0.12), // smoke the cursor adds (0 = cursor only pushes)
+    mouseForce: n('mouse-force', 3000),
+    ambientEvery: n('ambient-every', 2200), // ms between self-made puffs
+    ambientDye: n('ambient-dye', 0.5),
+    ambientForce: n('ambient-force', 350),
+    ambientRadius: n('ambient-radius', 0.3),
+    seed: n('seed', 6), // puffs on load
+    flashlight: n('flashlight', 0), // 0..1, darkens everything outside a light around the cursor
+    sporeCount: n('spore-count', 1),
+    sporeGravity: n('spore-gravity', -0.12), // px/frame, negative rises
+    sporeSize: n('spore-size', 1),
   };
 }
 
@@ -54,11 +73,7 @@ function startFluid(canvas: HTMLCanvasElement, theme: ReturnType<typeof readThem
   const SIM_RES = small ? 96 : 128;
   const DYE_RES = small ? 384 : 768;
   const PRESSURE_ITERS = 20;
-  const CURL = 22;
   const VEL_DISS = 0.35;
-  const DYE_DISS = 0.35;
-  const RADIUS = 0.3 / 100;
-  const FORCE = 5000;
 
   const vs = `#version 300 es
 in vec2 aPos;
@@ -110,8 +125,15 @@ void main() {
   float L = texture(uPressure, vL).x, R = texture(uPressure, vR).x, T = texture(uPressure, vT).x, B = texture(uPressure, vB).x;
   o = vec4(texture(uVelocity, vUv).xy - vec2(R - L, T - B), 0.0, 1.0);
 }`,
-    display: `uniform sampler2D uTexture; uniform vec3 bg;
-void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = vec4(bg * (1.0 - c) + c, 1.0); }`,
+    display: `uniform sampler2D uTexture; uniform vec3 bg; uniform vec2 light; uniform float flashlight, aspect;
+void main() {
+  vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4);
+  vec3 col = bg * (1.0 - c) + c;
+  float d = length((vUv - light) * vec2(aspect, 1.0));
+  float lit = smoothstep(0.42, 0.04, d);
+  col *= mix(1.0 - 0.8 * flashlight, 1.0 + 0.25 * flashlight, lit);
+  o = vec4(col, 1.0);
+}`,
   };
 
   const compile = (type: number, src: string) => {
@@ -220,12 +242,13 @@ void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
   };
 
-  const splat = (x: number, y: number, dx: number, dy: number, c: RGB) => {
+  const splat = (x: number, y: number, dx: number, dy: number, c: RGB, size = theme.radius) => {
     const aspect = canvas.width / canvas.height;
+    const r = size / 100;
     const u = use(P.splat, [1 / vel.w, 1 / vel.h]);
     gl.uniform1f(u.aspect, aspect);
     gl.uniform2f(u.point, x, y);
-    gl.uniform1f(u.radius, aspect > 1 ? RADIUS * aspect : RADIUS);
+    gl.uniform1f(u.radius, aspect > 1 ? r * aspect : r);
     gl.uniform1i(u.uTarget, tex(0, vel.read.tex));
     gl.uniform3f(u.color, dx, dy, 0);
     blit(vel.write);
@@ -243,7 +266,7 @@ void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = 
   const seed = (n: number) => {
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2;
-      splat(Math.random(), Math.random(), Math.cos(a) * 600, Math.sin(a) * 600, tint(i, 0.7));
+      splat(Math.random(), Math.random(), Math.cos(a) * theme.ambientForce, Math.sin(a) * theme.ambientForce, tint(i, theme.ambientDye * 1.4), theme.ambientRadius);
     }
   };
 
@@ -256,7 +279,7 @@ void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = 
     u = use(P.vorticity, t);
     gl.uniform1i(u.uVelocity, tex(0, vel.read.tex));
     gl.uniform1i(u.uCurl, tex(1, curl.tex));
-    gl.uniform1f(u.curl, CURL);
+    gl.uniform1f(u.curl, theme.curl);
     gl.uniform1f(u.dt, dt);
     blit(vel.write);
     vel.swap();
@@ -295,17 +318,20 @@ void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = 
 
     gl.uniform1i(u.uVelocity, tex(0, vel.read.tex));
     gl.uniform1i(u.uSource, tex(1, dye.read.tex));
-    gl.uniform1f(u.dissipation, DYE_DISS);
+    gl.uniform1f(u.dissipation, theme.fade);
     blit(dye.write);
     dye.swap();
 
     u = use(P.display, t);
     gl.uniform1i(u.uTexture, tex(0, dye.read.tex));
     gl.uniform3f(u.bg, theme.bg[0], theme.bg[1], theme.bg[2]);
+    gl.uniform1f(u.flashlight, theme.flashlight);
+    gl.uniform1f(u.aspect, canvas.width / canvas.height);
+    gl.uniform2f(u.light, pointer.seen ? pointer.x : 0.5, pointer.seen ? pointer.y : 0.45);
     blit(null);
   };
 
-  seed(6);
+  seed(theme.seed);
   let last = performance.now();
   let nextAmbient = 0;
   let colorIndex = 0;
@@ -319,18 +345,19 @@ void main() { vec3 c = texture(uTexture, vUv).rgb; c = 1.0 - exp(-c * 2.4); o = 
     if (pointer.moved) {
       pointer.moved = false;
       const aspect = canvas.width / canvas.height;
-      let dx = (pointer.x - pointer.px) * FORCE;
-      let dy = (pointer.y - pointer.py) * FORCE;
+      let dx = (pointer.x - pointer.px) * theme.mouseForce;
+      let dy = (pointer.y - pointer.py) * theme.mouseForce;
       if (aspect < 1) dx *= aspect; else dy /= aspect;
-      if (Math.abs(dx) + Math.abs(dy) > 1) splat(pointer.x, pointer.y, dx, dy, tint(colorIndex, 0.4));
+      if (Math.abs(dx) + Math.abs(dy) > 1) splat(pointer.x, pointer.y, dx, dy, tint(colorIndex, theme.mouseDye));
     }
     pointer.px = pointer.x;
     pointer.py = pointer.y;
 
     if (now > nextAmbient) {
-      nextAmbient = now + 1400 + Math.random() * 1600;
+      nextAmbient = now + theme.ambientEvery * (0.6 + Math.random() * 0.8);
       const a = Math.random() * Math.PI * 2;
-      splat(Math.random(), Math.random(), Math.cos(a) * 350, Math.sin(a) * 350, tint(Math.floor(Math.random() * 4), 0.5));
+      const f = theme.ambientForce;
+      splat(Math.random(), Math.random(), Math.cos(a) * f, Math.sin(a) * f, tint(Math.floor(Math.random() * 4), theme.ambientDye), theme.ambientRadius);
     }
 
     step(dt);
@@ -347,7 +374,7 @@ function startSpores(canvas: HTMLCanvasElement, theme: ReturnType<typeof readThe
   if (!ctx) return;
   const dpr = Math.min(devicePixelRatio || 1, 1.5);
   const colors = theme.palette.map((c) => c.map((v) => Math.round(v * 255)).join(','));
-  const count = innerWidth < 700 ? 120 : 300;
+  const count = Math.round((innerWidth < 700 ? 120 : 300) * theme.sporeCount);
   const R = 130;
 
   const resize = () => {
@@ -360,12 +387,12 @@ function startSpores(canvas: HTMLCanvasElement, theme: ReturnType<typeof readThe
 
   const spores = Array.from({ length: count }, () => {
     const bx = (Math.random() - 0.5) * 0.25;
-    const by = -0.05 - Math.random() * 0.2;
+    const by = theme.sporeGravity * (0.4 + Math.random() * 1.2);
     return {
       x: Math.random() * innerWidth,
       y: Math.random() * innerHeight,
       vx: bx, vy: by, bx, by,
-      r: 0.6 + Math.random() * 1.8,
+      r: (0.6 + Math.random() * 1.8) * theme.sporeSize,
       c: colors[Math.floor(Math.random() * colors.length)],
       ph: Math.random() * Math.PI * 2,
     };

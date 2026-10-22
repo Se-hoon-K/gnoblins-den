@@ -19,6 +19,9 @@
   --haze-3: #2ef2ff;
   --haze-4: #f5ff3d;
   --haze-strength: 1;
+  /* Behaviour knobs (defaults live in spore-haze.ts): --haze-curl, -fade, -radius, -mouse-dye,
+     -mouse-force, -ambient-every, -ambient-dye, -ambient-force, -ambient-radius, -seed,
+     -flashlight, -spore-count, -spore-gravity, -spore-size. Override per game in games.ts. */
   --font-display: 'Kablammo', 'Gochi Hand', cursive;
   --font-heading: 'Kablammo', 'Gochi Hand', cursive;
   --font-hand: 'Gochi Hand', cursive;
