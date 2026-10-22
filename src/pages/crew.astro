@@ -1,0 +1,19 @@
+---
+import Room from '../layouts/Room.astro';
+import CrewCard from '../components/CrewCard.astro';
+import { crew } from '../data/crew';
+---
+
+<Room title="Crew Quarters | Gnoblin's Den">
+  <section class="room den">
+    <div class="wrap">
+      <header>
+        <h1 class="display">Crew Quarters</h1>
+        <p class="lede">The goblins (and one or two gnomes) behind the games. Please don't feed them after midnight.</p>
+      </header>
+      <div class="crew">
+        {crew.map((m) => <CrewCard {...m} />)}
+      </div>
+    </div>
+  </section>
+</Room>

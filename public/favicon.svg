@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Gnoblin's Den logo placeholder">
+  <!-- PLACEHOLDER: goblin wearing a gnome hat. Replace with the real logo. -->
+  <path d="M60 2 L96 70 H24 Z" fill="#ff3df2"/>
+  <ellipse cx="60" cy="72" rx="42" ry="8" fill="#c22bb8"/>
+  <path d="M10 82 L30 92 L22 100 Z M110 82 L90 92 L98 100 Z" fill="#8fd11f"/>
+  <ellipse cx="60" cy="100" rx="34" ry="32" fill="#b6ff2e"/>
+  <circle cx="47" cy="96" r="7" fill="#0d0b12"/><circle cx="73" cy="96" r="7" fill="#0d0b12"/>
+  <circle cx="49" cy="94" r="2.2" fill="#f5ff3d"/><circle cx="75" cy="94" r="2.2" fill="#f5ff3d"/>
+  <path d="M46 114 Q60 124 74 114" stroke="#0d0b12" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M53 117 v5 M67 117 v5" stroke="#f4f1e6" stroke-width="3"/>
+</svg>

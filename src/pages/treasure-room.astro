@@ -1,0 +1,19 @@
+---
+import Room from '../layouts/Room.astro';
+import Exhibit from '../components/Exhibit.astro';
+import { games } from '../data/games';
+---
+
+<Room title="Treasure Room | Gnoblin's Den">
+  <section class="room den">
+    <div class="wrap">
+      <header>
+        <h1 class="display">Treasure Room</h1>
+        <p class="lede">Every game we've dug up so far. Handle with care. Some of them bite.</p>
+      </header>
+      <div class="exhibits">
+        {games.map((game) => <Exhibit game={game} />)}
+      </div>
+    </div>
+  </section>
+</Room>

@@ -1,0 +1,59 @@
+---
+import Room from '../layouts/Room.astro';
+import ItemCard from '../components/ItemCard.astro';
+import { games, type Game } from '../data/games';
+
+export function getStaticPaths() {
+  return games.map((game) => ({ params: { game: game.slug }, props: { game } }));
+}
+
+const { game } = Astro.props as { game: Game };
+---
+
+<Room title={`${game.name} | Gnoblin's Den`} description={`${game.name}: ${game.tagline}`} game={game.slug} theme={game.theme}>
+  <section class="room game-room">
+    <div class="wrap">
+      <div class="game-hero">
+        <div>
+          <h1 class="game-title">{game.name}</h1>
+          <p class="lede">{game.tagline}</p>
+          <p>{game.blurb}</p>
+        </div>
+        <ItemCard game={game} />
+      </div>
+
+      {
+        game.trailer && (
+          <section class="game-section">
+            <h2>Trailer</h2>
+            <iframe class="trailer" src={game.trailer} title={`${game.name} trailer`} allowfullscreen loading="lazy" />
+          </section>
+        )
+      }
+
+      {
+        game.features.length > 0 && (
+          <section class="game-section">
+            <h2>What's inside</h2>
+            <ul class="features">
+              {game.features.map((f) => <li>{f}</li>)}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        game.screenshots.length > 0 && (
+          <section class="game-section">
+            <h2>Screenshots</h2>
+            <div class="screens">
+              {game.screenshots.map((s) => <img src={s.src} alt={s.alt} loading="lazy" />)}
+            </div>
+          </section>
+        )
+      }
+
+      <a class="back" href="/treasure-room">← Back to the Treasure Room</a>
+    </div>
+  </section>
+</Room>

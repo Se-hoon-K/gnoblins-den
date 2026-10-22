@@ -1,0 +1,72 @@
+---
+import Room from '../layouts/Room.astro';
+import { games, cta } from '../data/games';
+import { links } from '../data/links';
+
+const featured = games.find((g) => g.steamUrl);
+const signCta = featured ? cta(featured) : { label: 'Join the Discord', href: links.discord };
+
+// Burrow map chambers (viewBox 800×620). Locked rooms have no href.
+const chambers = [
+  { href: '/treasure-room', label: 'Treasure Room', sub: 'the games', x: 220, y: 230, rx: 170, c: 'var(--acid)' },
+  { href: '/crew', label: 'Crew Quarters', sub: 'the goblins', x: 590, y: 220, rx: 165, c: 'var(--magenta)' },
+  { href: '/the-fog', label: 'The Fog', sub: 'demo soon', x: 120, y: 470, rx: 105, c: '#cfe3e8' },
+  { href: '/trust-me-bro', label: 'Trust Me Bro', sub: 'still hammering', x: 350, y: 520, rx: 125, c: 'var(--toxic)' },
+  { href: '/door', label: 'Front Door', sub: 'say hi', x: 620, y: 420, rx: 130, c: 'var(--cyan)' },
+  { label: 'Library', sub: 'locked · devlog', x: 640, y: 560, rx: 110, c: 'var(--muted)' },
+];
+---
+
+<Room title="Gnoblin's Den | Game is a trip" bare>
+  <section class="entrance" aria-label="Entrance">
+    <div class="entrance-stage">
+      <p class="sign sign-name fade">Gnoblin's Den</p>
+      <img class="hole" src="/art/hole.svg" alt="A small, unremarkable burrow" width="360" height="252" />
+      <p class="slogan fade">Game is a trip.</p>
+      <a class="sign sign-enter fade" href="#map">Enter ↓</a>
+      <a class="sign sign-wishlist fade" href={signCta.href}>{signCta.label} →</a>
+    </div>
+  </section>
+
+  <section id="map" class="map-room den">
+    <div class="wrap">
+      <header>
+        <h1 class="display">You're in.</h1>
+        <p class="lede">
+          Gnoblin's Den makes weird little multiplayer games for you and your friends. Pick a room. Mind the
+          mushrooms.
+        </p>
+      </header>
+      <svg class="burrow-map" viewBox="0 0 800 620" role="group" aria-label="Map of the den">
+        <g class="tunnel">
+          <path d="M400 0 V110 Q400 140 340 170" />
+          <path d="M400 110 Q420 150 500 170" />
+          <path d="M220 280 Q180 380 130 430" />
+          <path d="M260 280 Q320 400 340 480" />
+          <path d="M590 270 Q620 340 620 380" />
+          <path d="M630 460 Q640 500 640 530" />
+        </g>
+        {
+          chambers.map((ch) => {
+            const body = (
+              <>
+                <ellipse cx={ch.x} cy={ch.y} rx={ch.rx} ry="56" />
+                <text x={ch.x} y={ch.y - 2}>{ch.label}</text>
+                <text class="sub" x={ch.x} y={ch.y + 26}>{ch.sub}</text>
+              </>
+            );
+            return ch.href ? (
+              <a class="chamber" href={ch.href} style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
+                {body}
+              </a>
+            ) : (
+              <g class="chamber locked" style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
+                {body}
+              </g>
+            );
+          })
+        }
+      </svg>
+    </div>
+  </section>
+</Room>

@@ -1,0 +1,24 @@
+---
+import { cta, type Game } from '../data/games';
+
+interface Props {
+  game: Game;
+  link?: boolean; // link the name to the game's room
+}
+const { game, link = false } = Astro.props;
+const c = cta(game);
+---
+
+<div class="item-card" style={`--rarity:${game.rarity.color}`}>
+  <h2 class="item-name">
+    {link ? <a href={`/${game.slug}`}>{game.name}</a> : game.name}
+  </h2>
+  <p class="item-rarity">{game.rarity.label} · {game.genre}</p>
+  <dl class="item-stats">
+    <div><dt>Players</dt><dd>{game.players}</dd></div>
+    <div><dt>Session</dt><dd>{game.session}</dd></div>
+    <div><dt>Status</dt><dd>{game.status}</dd></div>
+  </dl>
+  <p class="item-flavor">“{game.flavor}”</p>
+  <a class="btn" href={c.href} style={`--accent:${game.rarity.color}`}>{c.label}</a>
+</div>

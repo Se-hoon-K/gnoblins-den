@@ -1,0 +1,34 @@
+---
+import Room from '../layouts/Room.astro';
+import { links } from '../data/links';
+---
+
+<Room title="Front Door | Gnoblin's Den">
+  <section class="room den">
+    <div class="wrap">
+      <header>
+        <h1 class="display">Front Door</h1>
+        <p class="lede">Knock knock. Find players, report bugs, or just say hi.</p>
+      </header>
+
+      <a class="discord-block" href={links.discord}>
+        <h2>Join the Den on Discord</h2>
+        <p>Find people to play with, catch playtests first, and watch us break things in real time.</p>
+        <span class="btn">Join the Discord →</span>
+      </a>
+
+      <ul class="contact-list">
+        <li>
+          <a href={`mailto:${links.email}`}><strong>Email</strong><span>{links.email}</span></a>
+        </li>
+        {
+          links.socials.map((s) => (
+            <li>
+              <a href={s.href}><strong>{s.label}</strong><span>{s.href.replace('https://', '')}</span></a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Room>

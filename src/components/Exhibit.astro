@@ -1,0 +1,23 @@
+---
+import ItemCard from './ItemCard.astro';
+import { themeStyle, type Game } from '../data/games';
+
+interface Props {
+  game: Game;
+}
+const { game } = Astro.props;
+---
+
+<article class="exhibit" data-game={game.slug} style={themeStyle(game.theme)}>
+  <a class="case" href={`/${game.slug}`} aria-label={`Enter the ${game.name} room`}>
+    <div class="case-interior">
+      <span class="case-title">{game.name}</span>
+      {game.ticker && <div class="ticker" aria-hidden="true"><span>{game.ticker.repeat(3)}</span></div>}
+    </div>
+    <div class="case-glass"></div>
+    <span class="leak" aria-hidden="true"></span>
+    <span class="leak" aria-hidden="true"></span>
+    <span class="leak" aria-hidden="true"></span>
+  </a>
+  <ItemCard game={game} link />
+</article>

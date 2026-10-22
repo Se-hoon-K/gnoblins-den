@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import '../styles/games.css';
+import { games, cta, themeStyle } from '../data/games';
+import { links } from '../data/links';
+
+interface Props {
+  title: string;
+  description?: string;
+  bare?: boolean; // entrance page: no top bar
+  game?: string;
+  theme?: Record<string, string>;
+}
+
+const {
+  title,
+  description = "Gnoblin's Den makes weird little multiplayer games for you and your friends. Game is a trip.",
+  bare = false,
+  game,
+  theme,
+} = Astro.props;
+
+// Top bar CTA: the first game with a Steam page, else the Discord.
+const featured = games.find((g) => g.steamUrl);
+const topCta = featured ? cta(featured) : { label: 'Join the Discord', href: links.discord };
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Shrikhand&family=Space+Grotesk:wght@400;600&family=Special+Elite&family=Unbounded:wght@500;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body data-game={game} style={theme && themeStyle(theme)}>
+    {
+      !bare && (
+        <header class="topbar">
+          <a class="topbar-home" href="/">
+            <img src="/art/logo.svg" alt="" width="32" height="37" />
+            Gnoblin's Den
+          </a>
+          <nav aria-label="Primary">
+            <a class="btn btn-ghost" href="/#map">🗺 Map</a>
+            <a class="btn" href={topCta.href}>{topCta.label}</a>
+          </nav>
+        </header>
+      )
+    }
+    <main>
+      <slot />
+    </main>
+    <footer class="footer">
+      <nav aria-label="Rooms">
+        <a href="/treasure-room">Treasure Room</a>
+        <a href="/crew">Crew Quarters</a>
+        <a href="/door">Front Door</a>
+      </nav>
+      <p>© {new Date().getFullYear()} Gnoblin's Den. Game is a trip.</p>
+      <p>No gnomes were harmed. Most of them.</p>
+    </footer>
+  </body>
+</html>
