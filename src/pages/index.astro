@@ -60,13 +60,25 @@ const chambers = [
                 {body}
               </a>
             ) : (
-              <g class="chamber locked" style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
+              <g class="chamber locked" role="img" style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
                 {body}
               </g>
             );
           })
         }
       </svg>
+      <ul class="room-list">
+        {
+          chambers.filter((ch) => ch.href).map((ch) => (
+            <li>
+              <a href={ch.href} style={`--c:${ch.c}`}>
+                {ch.label}
+                <span>{ch.sub}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 </Room>

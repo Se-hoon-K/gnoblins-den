@@ -6,7 +6,7 @@ Mood for the whole den: **an unassuming burrow outside, a psychedelic goblin & g
 | File | Where it shows | Size / format | Notes |
 |---|---|---|---|
 | `public/art/logo.svg` (+ `public/favicon.svg`) | Top bar, favicon | SVG, square-ish | Goblin wearing a gnome hat. Needs to read at 32px. |
-| `public/art/hole.svg` | Home entrance, zoomed ~30× on scroll | SVG (vector, it gets huge) | Plain, earthy burrow mouth. **Centre must stay `#0d0b12`** so the zoom blends into the den. |
+| `public/art/hole.svg` | Home entrance, zoomed ~30× on scroll | SVG; it's zoomed as an image, so edges soften mid-zoom (fine) | Plain, earthy burrow mouth. **Centre must stay `#0d0b12`** so the zoom blends into the den. |
 | Wooden signs (currently CSS) | Entrance: name sign, "ENTER ↓", Wishlist sign | SVG or PNG @2x, ~400×120 | Hand-carved, slightly crooked. |
 | Burrow map (currently drawn in `src/pages/index.astro`) | Home, after entering | SVG preferred, 800×620 | Ant-farm cross-section. Rooms: Treasure Room, Crew Quarters, The Fog, Trust Me Bro, Front Door, Library (locked). |
 | Room backdrops | Treasure Room, Crew Quarters, Front Door | WebP @2x, 2400×1400, dark, low detail behind text | Each room should feel like a different chamber of the same den. |

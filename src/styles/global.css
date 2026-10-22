@@ -123,12 +123,14 @@ img { max-width: 100%; display: block; }
 .entrance {
   position: relative;
   height: 100vh;
+  height: 100svh;
   background: radial-gradient(ellipse 120% 70% at 50% 100%, #3a2c20, var(--dirt-dark) 70%);
 }
 .entrance-stage {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -162,7 +164,7 @@ img { max-width: 100%; display: block; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    .entrance { height: 220vh; }
+    .entrance { height: 220vh; height: calc(100svh + 120vh); }
     .hole {
       animation: dive linear both;
       animation-timeline: scroll(root);
@@ -190,11 +192,18 @@ img { max-width: 100%; display: block; }
 .burrow-map a.chamber:hover ellipse,
 .burrow-map a.chamber:focus-visible ellipse { fill: color-mix(in srgb, var(--c) 25%, var(--bg-raised)); filter: drop-shadow(0 0 14px var(--c)); }
 .burrow-map a.chamber:focus-visible { outline: none; }
-.burrow-map .locked { opacity: 0.45; }
+.burrow-map a.chamber:focus-visible ellipse { stroke: var(--toxic); stroke-width: 8; }
+.burrow-map .locked { opacity: 0.75; }
 .burrow-map .locked ellipse { stroke-dasharray: 10 8; }
 
+/* Small screens: the SVG map text gets tiny, so also list the rooms. */
+.room-list { display: none; list-style: none; padding: 0; margin: 24px 0 0; gap: 10px; }
+.room-list a { display: block; padding: 14px 18px; border-radius: var(--radius); background: var(--bg-raised); border: 2px solid var(--c); text-decoration: none; font-family: var(--font-heading); font-weight: 800; }
+.room-list span { display: block; font: 400 0.95rem var(--font-body); color: var(--muted); }
+@media (max-width: 600px) { .room-list { display: grid; } }
+
 /* ---------- Rooms ---------- */
-.room { padding: 56px 0 24px; }
+.room { padding: 56px 0 24px; overflow-x: clip; }
 .room > .wrap > header { margin-bottom: 40px; }
 
 /* Exhibits */
@@ -255,7 +264,7 @@ img { max-width: 100%; display: block; }
   display: block;
   padding: 32px;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, #5865f2, #8a3dff 60%, var(--magenta));
+  background: linear-gradient(135deg, #4752c4, #6a2bd1 60%, #a0108f);
   color: #fff;
   text-decoration: none;
   margin-bottom: 32px;
