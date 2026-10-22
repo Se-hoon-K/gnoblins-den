@@ -141,7 +141,6 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 .hole { width: min(62vmin, 360px); }
-.slogan { margin: 0; font-size: 1.1rem; color: #cbb89d; letter-spacing: 0.04em; }
 
 .sign {
   display: inline-block;
