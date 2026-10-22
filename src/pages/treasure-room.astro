@@ -1,18 +1,50 @@
 ---
 import Room from '../layouts/Room.astro';
 import Exhibit from '../components/Exhibit.astro';
+import Prop from '../components/Prop.astro';
 import { games } from '../data/games';
 ---
 
 <Room title="Treasure Room | Gnoblin's Den">
-  <section class="room den">
+  <section class="room treasure">
     <div class="wrap">
-      <header>
+      <header class="room-head">
         <h1 class="display">Treasure Room</h1>
-        <p class="lede">Every game we've dug up so far. Handle with care. Some of them bite.</p>
+        <p class="lede ink-note">Every game we've dug up so far. Handle with care. Some of them bite.</p>
       </header>
+
+      <!-- The hoard: a crooked shelf of junk, floating bits, a heap of gold. All placeholder props. -->
+      <div class="shelf" aria-hidden="true">
+        <Prop name="candle" x="4%" y="8px" size={70} />
+        <Prop name="skull-mug" x="16%" y="14px" size={64} rotate={-6} />
+        <Prop name="potion-magenta" x="30%" y="6px" size={72} rotate={4} hideSmall />
+        <Prop name="cassette" x="46%" y="26px" size={56} rotate={-10} hideSmall />
+        <Prop name="lantern" x="62%" y="2px" size={76} hideSmall />
+        <Prop name="scroll" x="77%" y="22px" size={58} rotate={12} />
+        <Prop name="bone" x="88%" y="30px" size={50} rotate={-30} hideSmall />
+        <div class="plank"></div>
+      </div>
+
+      <div class="hoard-float" aria-hidden="true">
+        <Prop name="eyeball" x="-4%" y="18%" size={58} rotate={-10} hideSmall />
+        <Prop name="crystal" x="98%" y="30%" size={64} rotate={8} hideSmall />
+        <Prop name="duck" x="-3%" y="70%" size={60} rotate={14} hideSmall />
+        <Prop name="controller" x="97%" y="78%" size={66} rotate={-16} hideSmall />
+      </div>
+
       <div class="exhibits">
         {games.map((game) => <Exhibit game={game} />)}
+      </div>
+
+      <div class="gold-heap" aria-hidden="true">
+        <svg viewBox="0 0 600 140" preserveAspectRatio="none">
+          <path d="M10 138 C60 70 150 40 300 34 C450 40 540 70 590 138Z" fill="#c99a16" stroke="#121014" stroke-width="5" stroke-linejoin="round" />
+          <path d="M120 96 q20 -10 40 0 M260 70 q20 -10 40 0 M400 90 q20 -10 40 0 M200 120 q16 -8 32 0 M340 116 q16 -8 32 0" stroke="#f5ff3d" stroke-width="5" fill="none" stroke-linecap="round" />
+        </svg>
+        <Prop name="coins" x="12%" y="-34px" size={80} rotate={-6} />
+        <Prop name="die" x="40%" y="-48px" size={60} rotate={20} />
+        <Prop name="coins" x="62%" y="-30px" size={74} rotate={8} />
+        <Prop name="mushroom-magenta" x="82%" y="-30px" size={64} rotate={-4} hideSmall />
       </div>
     </div>
   </section>

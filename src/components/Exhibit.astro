@@ -9,15 +9,24 @@ const { game } = Astro.props;
 ---
 
 <article class="exhibit" data-game={game.slug} style={themeStyle(game.theme)}>
-  <a class="case" href={`/${game.slug}`} aria-label={`Enter the ${game.name} room`}>
-    <div class="case-interior">
-      <span class="case-title">{game.name}</span>
-      {game.ticker && <div class="ticker" aria-hidden="true"><span>{game.ticker.repeat(3)}</span></div>}
-    </div>
-    <div class="case-glass"></div>
-    <span class="leak" aria-hidden="true"></span>
-    <span class="leak" aria-hidden="true"></span>
-    <span class="leak" aria-hidden="true"></span>
-  </a>
+  <div class="case-wrap">
+    <a class="case" href={`/${game.slug}`} aria-label={`Enter the ${game.name} room`}>
+      <div class="case-interior">
+        <span class="case-title">{game.name}</span>
+        {game.ticker && <div class="ticker" aria-hidden="true"><span>{game.ticker.repeat(3)}</span></div>}
+      </div>
+      <div class="case-glass"></div>
+      <span class="leak" aria-hidden="true"></span>
+      <span class="leak" aria-hidden="true"></span>
+      <span class="leak" aria-hidden="true"></span>
+    </a>
+    <span class="rarity-tag" style={`--rarity:${game.rarity.color}`} aria-hidden="true">{game.rarity.label}</span>
+    <svg class="pedestal" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M30 4 H370 L352 26 H48Z" fill="#3b2d4a" stroke="#121014" stroke-width="5" stroke-linejoin="round" />
+      <path d="M60 26 H340 V58 H60Z" fill="#2a2035" stroke="#121014" stroke-width="5" stroke-linejoin="round" />
+      <path d="M40 58 H360 V68 H40Z" fill="#3b2d4a" stroke="#121014" stroke-width="5" stroke-linejoin="round" />
+      <path d="M90 36 q30 -6 60 0 M240 44 q20 6 50 -2" stroke="#4d3d60" stroke-width="4" fill="none" stroke-linecap="round" />
+    </svg>
+  </div>
   <ItemCard game={game} link />
 </article>

@@ -14,26 +14,34 @@ const { game } = Astro.props as { game: Game };
   <section class="room game-room">
     <div class="wrap">
       <div class="game-hero">
-        <div>
+        <div class="game-intro">
           <h1 class="game-title">{game.name}</h1>
-          <p class="lede">{game.tagline}</p>
-          <p>{game.blurb}</p>
+          <p class="game-tagline">{game.tagline}</p>
+          <div class="ink-panel game-blurb">
+            <p>{game.blurb}</p>
+          </div>
         </div>
         <ItemCard game={game} />
       </div>
 
-      {
-        game.trailer && (
-          <section class="game-section">
-            <h2>Trailer</h2>
+      <!-- Key art slot: the game's world until real art/trailer exists. -->
+      <figure class="key-art">
+        {
+          game.trailer ? (
             <iframe class="trailer" src={game.trailer} title={`${game.name} trailer`} allowfullscreen loading="lazy" />
-          </section>
-        )
-      }
+          ) : (
+            <div class="case-interior" data-game={game.slug}>
+              <span class="case-title">{game.name}</span>
+              {game.ticker && <div class="ticker running" aria-hidden="true"><span>{game.ticker.repeat(3)}</span></div>}
+              <span class="key-art-note">[key art / trailer goes here]</span>
+            </div>
+          )
+        }
+      </figure>
 
       {
         game.features.length > 0 && (
-          <section class="game-section">
+          <section class="game-section ink-panel">
             <h2>What's inside</h2>
             <ul class="features">
               {game.features.map((f) => <li>{f}</li>)}
@@ -53,7 +61,7 @@ const { game } = Astro.props as { game: Game };
         )
       }
 
-      <a class="back" href="/treasure-room">← Back to the Treasure Room</a>
+      <a class="btn btn-ghost back" href="/treasure-room">← Back to the Treasure Room</a>
     </div>
   </section>
 </Room>
