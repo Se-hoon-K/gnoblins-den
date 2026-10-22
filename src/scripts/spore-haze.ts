@@ -1,7 +1,8 @@
 // Spore haze: neon smoke (WebGL2 stable fluids) + glowing spore specks (2D canvas)
 // that the cursor stirs. Colours and behaviour come from --haze-* custom properties on <body>
 // (defaults in global.css :root, per-game overrides in src/data/games.ts).
-// Reduced motion or no WebGL2 => canvases removed, the static CSS backdrop shows instead.
+// Reduced motion => both canvases removed and the static CSS backdrop shows. No WebGL2 (or a lost
+// context) => only the smoke canvas is removed; the 2D spores keep drifting over the CSS backdrop.
 
 const fluidCanvas = document.querySelector<HTMLCanvasElement>('.haze-fluid');
 const sporeCanvas = document.querySelector<HTMLCanvasElement>('.haze-spores');
@@ -50,7 +51,11 @@ addEventListener('pointermove', (e) => {
   pointer.cy = e.clientY;
   pointer.moved = true;
 });
-addEventListener('pointerleave', () => { pointer.cx = pointer.cy = -9999; });
+const forget = () => { pointer.cx = pointer.cy = -9999; };
+// Touch: stop repelling spores once the finger lifts. Mouse: once it leaves the window.
+addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') forget(); });
+addEventListener('pointercancel', forget);
+document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) forget(); });
 
 if (fluidCanvas && sporeCanvas) {
   if (reduce) {
@@ -202,10 +207,17 @@ void main() {
   };
 
   let vel: ReturnType<typeof pair>, dye: ReturnType<typeof pair>, pressure: ReturnType<typeof pair>, div: FBO, curl: FBO;
+  const free = (f: FBO) => { gl.deleteTexture(f.tex); gl.deleteFramebuffer(f.fb); };
+  let simW = 0, simH = 0;
   const resize = () => {
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
+    // Mobile URL bars change the height constantly; only rebuild the sim for real size changes.
+    if (simW && innerWidth === simW && Math.abs(innerHeight - simH) < 160) return false;
+    simW = innerWidth;
+    simH = innerHeight;
+    if (vel) [vel.read, vel.write, pressure.read, pressure.write, dye.read, dye.write, div, curl].forEach(free);
     const [sw, sh] = res(SIM_RES);
     const [dw, dh] = res(DYE_RES);
     vel = pair(sw, sh);
@@ -213,13 +225,18 @@ void main() {
     dye = pair(dw, dh);
     div = fbo(sw, sh);
     curl = fbo(sw, sh);
+    return true;
   };
   resize();
   let resizeTimer = 0;
   addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => { resize(); seed(4); }, 200);
+    resizeTimer = window.setTimeout(() => { if (resize()) seed(4); }, 200);
   });
+
+  // A lost context (e.g. phone tab backgrounded) can't be drawn to again: fall back to the CSS backdrop.
+  let alive = true;
+  canvas.addEventListener('webglcontextlost', () => { alive = false; canvas.remove(); });
 
   const use = (prog: Prog, texel: number[]) => {
     gl.useProgram(prog.p);
@@ -361,7 +378,7 @@ void main() {
     }
 
     step(dt);
-    requestAnimationFrame(frame);
+    if (alive) requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
   return true;

@@ -89,7 +89,7 @@ const game = games.find((g) => g.slug === 'the-fog')!;
 </Room>
 
 <script>
-  // Flashlight: reveal .fog-hidden around the pointer. Wanders by itself when idle (e.g. on phones).
+  // Flashlight: reveal .fog-hidden around the pointer. On touch devices it wanders by itself when idle.
   const layer = document.querySelector<HTMLElement>('.fog-hidden');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (layer && !reduce) {
@@ -101,8 +101,9 @@ const game = games.find((g) => g.slug === 'the-fog')!;
     };
     addEventListener('pointermove', (e) => { cx = e.clientX; cy = e.clientY; last = performance.now(); place(); });
     addEventListener('scroll', place, { passive: true });
+    const canHover = matchMedia('(hover: hover)').matches;
     const wander = (t: number) => {
-      if (t - last > 2500) {
+      if (!canHover && t - last > 2500) {
         cx = innerWidth * (0.5 + 0.35 * Math.sin(t / 2300));
         cy = innerHeight * (0.5 + 0.3 * Math.sin(t / 1700));
         place();
