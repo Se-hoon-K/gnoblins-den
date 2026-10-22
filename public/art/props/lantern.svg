@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><!-- PLACEHOLDER prop: swap 1:1 -->
+<path d="M50 8 v8 M38 16 h24" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M34 22 h32 l-4 8 h-24Z" fill="#6b3fa0" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M36 30 h28 v44 h-28Z" fill="#b6ff2e" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M50 30 v44 M36 52 h28" fill="none" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M32 74 h36 l-4 10 h-28Z" fill="#6b3fa0" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="50" cy="52" r="7" fill="#f5ff3d"/>
+</svg>

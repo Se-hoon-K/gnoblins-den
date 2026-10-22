@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><!-- PLACEHOLDER prop: swap 1:1 -->
+<path d="M14 30 h72 v56 h-72Z" fill="#6b3fa0" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M14 48 h72 M14 68 h72 M14 30 L86 86 M30 30 v-6 M70 30 v-6" fill="none" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M30 58 l10 -4 M60 76 l8 -3" stroke="#b6ff2e" stroke-width="3" stroke-linecap="round"/>
+</svg>

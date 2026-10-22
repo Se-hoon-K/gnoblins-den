@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140" aria-hidden="true">
-  <!-- PLACEHOLDER: burrow entrance. The centre colour must stay #0d0b12 so the zoom blends into the den. -->
+  <!-- PLACEHOLDER: burrow mouth. Keep the centre #0d0b12 so the zoom blends into the den. -->
   <defs>
-    <radialGradient id="inside" cx="50%" cy="55%" r="55%">
+    <radialGradient id="inside" cx="50%" cy="56%" r="58%">
       <stop offset="0" stop-color="#0d0b12"/>
-      <stop offset=".55" stop-color="#140d1d"/>
-      <stop offset=".85" stop-color="#3a0f38"/>
-      <stop offset="1" stop-color="#1c120d"/>
+      <stop offset=".6" stop-color="#0f0b0d"/>
+      <stop offset=".9" stop-color="#1e1510"/>
     </radialGradient>
   </defs>
-  <ellipse cx="100" cy="74" rx="96" ry="62" fill="#3b2b1e"/>
-  <ellipse cx="100" cy="76" rx="80" ry="52" fill="#251a12"/>
-  <ellipse cx="100" cy="78" rx="70" ry="45" fill="url(#inside)"/>
-  <circle cx="78" cy="70" r="1.6" fill="#b6ff2e" opacity=".8"/>
-  <circle cx="122" cy="84" r="1.2" fill="#2ef2ff" opacity=".8"/>
-  <circle cx="104" cy="62" r="1" fill="#ff3df2" opacity=".9"/>
-  <path d="M14 96 q10 -6 18 0 M168 92 q10 -8 20 2" stroke="#4a3626" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M8 80 C6 40 52 12 102 14 C154 14 196 44 192 82 C190 118 150 134 100 134 C50 134 10 118 8 80Z" fill="#4a3727" stroke="#121014" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M22 82 C22 50 58 30 102 30 C146 30 180 52 178 84 C176 112 144 124 100 124 C58 124 22 112 22 82Z" fill="#2b2018" stroke="#121014" stroke-width="4"/>
+  <path d="M32 84 C32 58 62 42 101 42 C140 42 168 60 167 86 C166 108 138 117 100 117 C64 117 32 108 32 84Z" fill="url(#inside)" stroke="#121014" stroke-width="4"/>
+  <ellipse cx="80" cy="72" rx="3.2" ry="2.2" fill="#e8c55a"/>
+  <ellipse cx="93" cy="72" rx="3.2" ry="2.2" fill="#e8c55a"/>
+  <path d="M14 70 q-6 -4 -4 -10 M188 66 q6 -6 2 -12 M40 22 l-4 -8 M150 20 l6 -7" stroke="#121014" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="30" cy="118" rx="11" ry="7" fill="#5b4a3c" stroke="#121014" stroke-width="3.5"/>
+  <ellipse cx="172" cy="116" rx="8" ry="5.5" fill="#5b4a3c" stroke="#121014" stroke-width="3.5"/>
 </svg>

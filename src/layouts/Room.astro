@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/games.css';
+import SporeHaze from '../components/SporeHaze.astro';
 import { games, cta, themeStyle } from '../data/games';
 import { links } from '../data/links';
 
@@ -36,17 +37,31 @@ const topCta = featured ? cta(featured) : { label: 'Join the Discord', href: lin
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bungee&family=Shrikhand&family=Space+Grotesk:wght@400;600&family=Special+Elite&family=Unbounded:wght@500;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Gochi+Hand&family=Kablammo:MORF@0..60&family=Space+Grotesk:wght@400;600;700&family=Special+Elite&display=swap"
       rel="stylesheet"
     />
   </head>
   <body data-game={game} style={theme && themeStyle(theme)}>
+    <!-- Shared ink filters: wobbly hand-drawn edges. -->
+    <svg class="defs" aria-hidden="true" focusable="false">
+      <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" />
+        <feDisplacementMap in="SourceGraphic" scale="4" />
+      </filter>
+      <filter id="ink-strong" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="8" />
+        <feDisplacementMap in="SourceGraphic" scale="9" />
+      </filter>
+    </svg>
+
+    <SporeHaze />
+
     {
       !bare && (
         <header class="topbar">
           <a class="topbar-home" href="/">
-            <img src="/art/logo.svg" alt="" width="32" height="37" />
-            Gnoblin's Den
+            <img src="/art/logo.svg" alt="" width="34" height="40" />
+            <span>Gnoblin's Den</span>
           </a>
           <nav aria-label="Primary">
             <a class="btn btn-ghost" href="/#map">🗺 Map</a>

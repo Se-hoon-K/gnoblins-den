@@ -18,7 +18,7 @@ export interface Game {
   trailer?: string; // YouTube embed URL
   screenshots: { src: string; alt: string }[];
   ticker?: string;
-  theme: { bg: string; text: string; accent: string; 'game-font': string };
+  theme: Record<string, string>; // bg, text, accent, game-font, haze-1..4, haze-strength
 }
 
 export const games: Game[] = [
@@ -41,6 +41,11 @@ export const games: Game[] = [
       text: '#dfe7ea',
       accent: '#cfe3e8',
       'game-font': "'Special Elite', monospace",
+      'haze-1': '#9fb3ba',
+      'haze-2': '#cfe3e8',
+      'haze-3': '#6f8a94',
+      'haze-4': '#dfe7ea',
+      'haze-strength': '0.7',
     },
   },
   {
@@ -63,6 +68,11 @@ export const games: Game[] = [
       text: '#fff3fd',
       accent: '#ff3df2',
       'game-font': "'Bungee', sans-serif",
+      'haze-1': '#ff3df2',
+      'haze-2': '#f5ff3d',
+      'haze-3': '#ffd23d',
+      'haze-4': '#b6ff2e',
+      'haze-strength': '1.1',
     },
   },
 ];

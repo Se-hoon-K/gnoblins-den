@@ -3,18 +3,25 @@
   --bg: #0d0b12;
   --bg-raised: #17131f;
   --text: #f4f1e6;
-  --muted: #b3acc4;
+  --muted: #b9b2cb;
+  --ink: #121014;
   --acid: #b6ff2e;
   --magenta: #ff3df2;
   --cyan: #2ef2ff;
   --toxic: #f5ff3d;
-  --dirt: #2a2119;
-  --dirt-dark: #15100b;
-  --wood: #7a4f2c;
-  --wood-dark: #4d3019;
+  --dirt-dark: #120d0a;
+  --wood: #8a5a32;
+  --wood-dark: #5a3a1f;
   --accent: var(--acid);
-  --font-display: 'Shrikhand', cursive;
-  --font-heading: 'Unbounded', sans-serif;
+  /* Spore haze colours + intensity (overridden per game). */
+  --haze-1: #b6ff2e;
+  --haze-2: #ff3df2;
+  --haze-3: #2ef2ff;
+  --haze-4: #f5ff3d;
+  --haze-strength: 1;
+  --font-display: 'Kablammo', 'Gochi Hand', cursive;
+  --font-heading: 'Kablammo', 'Gochi Hand', cursive;
+  --font-hand: 'Gochi Hand', cursive;
   --font-body: 'Space Grotesk', system-ui, sans-serif;
   --game-font: var(--font-heading);
   --radius: 14px;
@@ -30,70 +37,124 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
   color: var(--text);
   font: 400 1.0625rem/1.6 var(--font-body);
   overflow-x: hidden;
+  /* Static fallback when the haze can't run (reduced motion / no WebGL2). */
+  background:
+    radial-gradient(40vmax 30vmax at 10% 10%, color-mix(in srgb, var(--haze-2) 22%, transparent), transparent 70%),
+    radial-gradient(45vmax 35vmax at 90% 30%, color-mix(in srgb, var(--haze-3) 16%, transparent), transparent 70%),
+    radial-gradient(50vmax 40vmax at 40% 100%, color-mix(in srgb, var(--haze-1) 14%, transparent), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
-/* Film grain over everything. */
+/* Paper/film grain over everything. */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.07;
+  opacity: 0.08;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+.defs { position: absolute; width: 0; height: 0; }
+
+/* Spore haze sits behind everything; content stacks above it. */
+.haze { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.haze canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+main, .footer { position: relative; z-index: 1; }
+
 main { flex: 1; }
 
-h1, h2, h3 { font-family: var(--font-heading); font-weight: 800; line-height: 1.1; margin: 0 0 0.5em; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 400; line-height: 1.05; margin: 0 0 0.5em; }
 a { color: inherit; }
 img { max-width: 100%; display: block; }
 
 .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
 
+/* Big psychedelic titles: wobbly letters that morph a little on hover. */
 .display {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.6rem, 8vw, 5.5rem);
-  line-height: 1;
+  font-variation-settings: 'MORF' 0;
+  font-size: clamp(2.8rem, 9vw, 6rem);
+  line-height: 0.95;
   color: var(--acid);
-  text-shadow: 4px 4px 0 var(--magenta), 8px 8px 0 var(--cyan);
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 5px 5px 0 var(--magenta), 10px 10px 0 var(--ink);
+  transition: font-variation-settings 0.6s ease;
 }
+.display:hover { font-variation-settings: 'MORF' 60; }
 
-.lede { color: var(--muted); font-size: 1.15rem; max-width: 60ch; }
+.lede { color: var(--text); font-size: 1.15rem; max-width: 60ch; }
 
-/* Psychedelic den backdrop: shared by inner rooms and the map. */
-.den {
-  background:
-    radial-gradient(40vmax 30vmax at 10% 10%, #ff3df233, transparent 70%),
-    radial-gradient(45vmax 35vmax at 90% 30%, #2ef2ff26, transparent 70%),
-    radial-gradient(50vmax 40vmax at 40% 100%, #b6ff2e1f, transparent 70%),
-    var(--bg);
+/* Ink panel: hand-drawn wobbly box. The wobble lives on ::before so text stays crisp. */
+.ink-panel, .ink-note { position: relative; isolation: isolate; }
+.ink-panel::before, .ink-note::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border: 3px solid var(--ink);
+  border-radius: 18px 12px 20px 10px;
+  box-shadow: 6px 6px 0 var(--ink);
+  filter: url(#ink);
+  backdrop-filter: blur(6px);
 }
+.ink-note { display: inline-block; padding: 14px 20px; }
 
-/* Buttons */
+/* Buttons: neon fill, black ink outline, hard ink shadow. */
 .btn {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  padding: 0.7em 1.2em;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #0d0b12;
-  font: 600 1rem/1 var(--font-body);
+  padding: 0.75em 1.3em;
+  color: var(--ink);
+  font: 700 1rem/1 var(--font-body);
   text-decoration: none;
-  box-shadow: 0 0 0 0 var(--accent);
-  transition: box-shadow 0.2s, translate 0.1s;
+  transition: translate 0.12s;
 }
-.btn:hover { box-shadow: 0 0 24px 2px color-mix(in srgb, var(--accent) 60%, transparent); }
-.btn:active { translate: 0 2px; }
-.btn-ghost { background: transparent; color: var(--text); outline: 2px solid color-mix(in srgb, var(--text) 40%, transparent); }
-.btn-ghost:hover { box-shadow: none; outline-color: var(--text); }
-:focus-visible { outline: 3px solid var(--toxic); outline-offset: 3px; }
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  border: 3px solid var(--ink);
+  border-radius: 14px 18px 12px 16px;
+  box-shadow: 4px 4px 0 var(--ink);
+  filter: url(#ink);
+  transition: box-shadow 0.12s;
+}
+.btn:hover { translate: -2px -2px; }
+.btn:hover::before { box-shadow: 7px 7px 0 var(--ink), 0 0 26px color-mix(in srgb, var(--accent) 60%, transparent); }
+.btn:active { translate: 2px 2px; }
+.btn:active::before { box-shadow: 1px 1px 0 var(--ink); }
+.btn-ghost { color: var(--text); }
+.btn-ghost::before { background: color-mix(in srgb, var(--bg) 70%, transparent); border-color: var(--text); box-shadow: 4px 4px 0 var(--ink); }
+:focus-visible { outline: 3px dashed var(--toxic); outline-offset: 4px; }
+
+/* Hand-drawn props */
+.prop {
+  position: absolute;
+  z-index: 0;
+  rotate: var(--r, 0deg);
+  filter: url(#ink) drop-shadow(4px 4px 0 var(--ink));
+  transition: rotate 0.3s;
+  pointer-events: auto;
+}
+.prop:hover { animation: wiggle 0.5s ease-in-out; }
+@keyframes wiggle {
+  25% { rotate: calc(var(--r, 0deg) - 10deg); scale: 1.08; }
+  75% { rotate: calc(var(--r, 0deg) + 8deg); }
+}
+@media (max-width: 600px) { .prop.hide-small { display: none; } }
 
 /* Top bar */
 .topbar {
@@ -106,25 +167,27 @@ img { max-width: 100%; display: block; }
   gap: 12px;
   flex-wrap: wrap;
   padding: 10px 16px;
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 3px solid var(--ink);
 }
-.topbar-home { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 1.3rem; text-decoration: none; color: var(--acid); }
-.topbar-home img { width: 32px; }
-.topbar nav { display: flex; gap: 8px; }
+.topbar-home { display: flex; align-items: center; gap: 8px; font: 400 1.5rem/1 var(--font-display); text-decoration: none; color: var(--acid); -webkit-text-stroke: 1.5px var(--ink); paint-order: stroke fill; }
+.topbar-home img { width: 34px; filter: url(#ink); }
+.topbar nav { display: flex; gap: 12px; }
 .topbar .btn { font-size: 0.9rem; padding: 0.6em 1em; }
 
 /* Footer */
 .footer { padding: 40px 16px; text-align: center; color: var(--muted); font-size: 0.95rem; }
-.footer nav { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.footer nav { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; font: 400 1.2rem var(--font-hand); }
 .footer p { margin: 4px 0; }
 
-/* ---------- Entrance ---------- */
+/* ---------- Entrance (earthy, no neon) ---------- */
 .entrance {
   position: relative;
+  z-index: 2;
   height: 100vh;
   height: 100svh;
-  background: radial-gradient(ellipse 120% 70% at 50% 100%, #3a2c20, var(--dirt-dark) 70%);
+  background: linear-gradient(180deg, #0c0907 0%, #17110c 55%, #1f1712 100%);
 }
 .entrance-stage {
   position: sticky;
@@ -136,30 +199,45 @@ img { max-width: 100%; display: block; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  padding: 16px;
+  gap: 22px;
+  padding: 16px 16px 12vh;
   text-align: center;
 }
-.hole { width: min(62vmin, 360px); }
+.burrow { position: relative; z-index: 1; width: min(60vmin, 340px); }
+.mound { position: absolute; z-index: -1; width: 230%; left: -65%; top: 8%; filter: url(#ink); overflow: visible; }
+.hole { width: 100%; filter: url(#ink); }
+.ground { position: absolute; left: 0; bottom: 0; width: 100%; height: 26vh; filter: url(#ink); }
+@media (max-width: 600px) { .mound { width: 320%; left: -110%; top: 4%; } }
 
 .sign {
+  position: relative;
+  z-index: 2;
   display: inline-block;
-  padding: 0.45em 1em;
-  background: linear-gradient(180deg, var(--wood), var(--wood-dark));
-  border: 2px solid #2b1a0c;
-  border-radius: 6px;
-  color: #f1dfc4;
-  font: 800 1rem/1.2 var(--font-heading);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 0.35em 1em 0.45em;
+  color: #f6e6c8;
+  font: 400 1.35rem/1.1 var(--font-hand);
+  letter-spacing: 0.02em;
   text-decoration: none;
-  box-shadow: 0 6px 0 #1a0f07;
   rotate: -2deg;
+  isolation: isolate;
 }
-.sign-name { font-size: clamp(1.1rem, 4vw, 1.6rem); rotate: 2deg; margin: 0; }
+.sign::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(178deg, transparent 0 9px, #00000022 9px 11px),
+    linear-gradient(180deg, var(--wood), var(--wood-dark));
+  border: 3px solid var(--ink);
+  border-radius: 8px 14px 6px 12px;
+  box-shadow: 5px 5px 0 var(--ink);
+  filter: url(#ink);
+}
+.sign-name { font-size: clamp(1.6rem, 6vw, 2.4rem); rotate: 2deg; margin: 0; }
 .sign-enter { transition: translate 0.15s; }
-.sign-enter:hover { translate: 0 3px; }
-.sign-wishlist { position: absolute; right: 16px; bottom: 24px; font-size: 0.8rem; rotate: 4deg; }
+.sign-enter:hover { translate: 0 4px; }
+.sign-wishlist { position: absolute; right: 16px; bottom: 7vh; font-size: 1.05rem; rotate: 5deg; }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -176,29 +254,32 @@ img { max-width: 100%; display: block; }
     }
   }
 }
-@keyframes dive { to { scale: 32; } }
+@keyframes dive { to { scale: 34; } }
 @keyframes fade-out { to { opacity: 0; translate: 0 -30px; visibility: hidden; } }
 
-/* ---------- Map ---------- */
-.map-room { padding: 80px 0 40px; scroll-margin-top: 0; }
-.map-room header { text-align: center; margin-bottom: 24px; }
-.map-room .lede { margin-inline: auto; }
-.burrow-map { width: 100%; height: auto; max-width: 900px; margin-inline: auto; display: block; }
-.burrow-map .tunnel { fill: none; stroke: #2a1f33; stroke-width: 22; stroke-linecap: round; }
-.burrow-map .chamber ellipse { fill: var(--bg-raised); stroke: var(--c); stroke-width: 4; transition: fill 0.2s, filter 0.2s; }
-.burrow-map .chamber text { fill: var(--text); font-family: var(--font-heading); font-weight: 800; font-size: 26px; text-anchor: middle; }
-.burrow-map .chamber .sub { font-family: var(--font-body); font-weight: 400; font-size: 18px; fill: var(--muted); }
-.burrow-map a.chamber:hover ellipse,
-.burrow-map a.chamber:focus-visible ellipse { fill: color-mix(in srgb, var(--c) 25%, var(--bg-raised)); filter: drop-shadow(0 0 14px var(--c)); }
-.burrow-map a.chamber:focus-visible { outline: none; }
-.burrow-map a.chamber:focus-visible ellipse { stroke: var(--toxic); stroke-width: 8; }
-.burrow-map .locked { opacity: 0.75; }
-.burrow-map .locked ellipse { stroke-dasharray: 10 8; }
+/* ---------- Den map (inside: haze, pods, mycelium) ---------- */
+.map-room { padding: 80px 0 40px; }
+.map-head { text-align: center; margin-bottom: 8px; }
+.map-head .lede { margin: 12px auto 0; }
+.map-stage { position: relative; max-width: 920px; margin: 0 auto; }
+.den-map { position: relative; z-index: 1; width: 100%; height: auto; display: block; overflow: visible; }
+.den-map .threads path { fill: none; stroke: var(--acid); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 9; opacity: 0.9; }
+.den-map .pod-ink { fill: none; stroke: var(--ink); stroke-width: 10; filter: url(#ink-strong); }
+.den-map .pod { fill: color-mix(in srgb, var(--c) 22%, #0d0b12e6); stroke: var(--c); stroke-width: 3.5; filter: url(#ink-strong); transition: fill 0.25s; }
+.den-map .pod-label { fill: var(--text); font: 400 34px var(--font-hand); text-anchor: middle; stroke: var(--ink); stroke-width: 6px; paint-order: stroke fill; }
+.den-map .pod-sub { fill: var(--c); font: 400 21px var(--font-hand); text-anchor: middle; stroke: var(--ink); stroke-width: 5px; paint-order: stroke fill; }
+.den-map .chamber { transform-box: fill-box; transform-origin: center; transition: scale 0.25s; }
+.den-map a.chamber:hover, .den-map a.chamber:focus-visible { scale: 1.06; }
+.den-map a.chamber:hover .pod, .den-map a.chamber:focus-visible .pod { fill: color-mix(in srgb, var(--c) 45%, #0d0b12); }
+.den-map a.chamber:focus-visible { outline: none; }
+.den-map a.chamber:focus-visible .pod { stroke: var(--toxic); stroke-width: 7; }
+.den-map .locked .pod { stroke-dasharray: 10 8; }
 
-/* Small screens: the SVG map text gets tiny, so also list the rooms. */
-.room-list { display: none; list-style: none; padding: 0; margin: 24px 0 0; gap: 10px; }
-.room-list a { display: block; padding: 14px 18px; border-radius: var(--radius); background: var(--bg-raised); border: 2px solid var(--c); text-decoration: none; font-family: var(--font-heading); font-weight: 800; }
-.room-list span { display: block; font: 400 0.95rem var(--font-body); color: var(--muted); }
+/* Small screens: SVG labels get tiny, so also list the rooms. */
+.room-list { display: none; list-style: none; padding: 0; margin: 24px 0 0; gap: 14px; }
+.room-list a { position: relative; isolation: isolate; display: block; padding: 14px 18px; text-decoration: none; font: 400 1.5rem/1.1 var(--font-hand); }
+.room-list a::before { content: ''; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--c) 22%, #0d0b12f0); border: 3px solid var(--ink); outline: 2px solid var(--c); outline-offset: -7px; border-radius: 16px 10px 18px 12px; box-shadow: 5px 5px 0 var(--ink); filter: url(#ink); }
+.room-list span { display: block; font-size: 1.05rem; color: var(--c); }
 @media (max-width: 600px) { .room-list { display: grid; } }
 
 /* ---------- Rooms ---------- */

@@ -1,0 +1,22 @@
+---
+// A hand-drawn prop placed absolutely inside a positioned parent. Wiggles on hover.
+interface Props {
+  name: string; // file in /public/art/props
+  x: string; // left, e.g. '12%'
+  y: string; // top
+  size?: number; // px
+  rotate?: number; // deg
+  hideSmall?: boolean; // hide under 600px to keep phones uncluttered
+}
+const { name, x, y, size = 72, rotate = 0, hideSmall = false } = Astro.props;
+---
+
+<img
+  class:list={['prop', { 'hide-small': hideSmall }]}
+  src={`/art/props/${name}.svg`}
+  alt=""
+  width={size}
+  height={size}
+  loading="lazy"
+  style={`left:${x};top:${y};width:${size}px;--r:${rotate}deg`}
+/>

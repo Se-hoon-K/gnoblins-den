@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><!-- PLACEHOLDER prop: swap 1:1 -->
+<path d="M50 6 C60 18 58 28 50 32 C42 28 40 18 50 6Z" fill="#f5ff3d" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M50 16 C54 22 53 26 50 28 C47 26 46 22 50 16Z" fill="#ff3df2"/>
+<path d="M50 32 v6" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M36 40 h28 v42 h-28Z" fill="#f4f1e6" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M36 40 c4 6 6 12 4 18 M58 40 c-2 6 2 8 0 14" fill="none" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="50" cy="86" rx="26" ry="7" fill="#7a5bd0" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

@@ -1,71 +1,162 @@
 ---
 import Room from '../layouts/Room.astro';
+import Prop from '../components/Prop.astro';
 import { games, cta } from '../data/games';
 import { links } from '../data/links';
 
 const featured = games.find((g) => g.steamUrl);
 const signCta = featured ? cta(featured) : { label: 'Join the Discord', href: links.discord };
 
-// Burrow map chambers (viewBox 800×620). Locked rooms have no href.
+// Den map (viewBox 800×640): rooms are pods floating in the spore haze, joined by mycelium.
+// Locked rooms have no href.
 const chambers = [
-  { href: '/treasure-room', label: 'Treasure Room', sub: 'the games', x: 220, y: 230, rx: 170, c: 'var(--acid)' },
-  { href: '/crew', label: 'Crew Quarters', sub: 'the goblins', x: 590, y: 220, rx: 165, c: 'var(--magenta)' },
-  { href: '/the-fog', label: 'The Fog', sub: 'demo soon', x: 120, y: 470, rx: 105, c: '#cfe3e8' },
-  { href: '/trust-me-bro', label: 'Trust Me Bro', sub: 'still hammering', x: 350, y: 520, rx: 125, c: 'var(--toxic)' },
-  { href: '/door', label: 'Front Door', sub: 'say hi', x: 620, y: 420, rx: 130, c: 'var(--cyan)' },
-  { label: 'Library', sub: 'locked · devlog', x: 640, y: 560, rx: 110, c: 'var(--muted)' },
+  { href: '/treasure-room', label: 'Treasure Room', sub: 'the games', x: 225, y: 200, rx: 175, ry: 82, c: '#b6ff2e', seed: 3 },
+  { href: '/crew', label: 'Crew Quarters', sub: 'the goblins', x: 590, y: 190, rx: 160, ry: 76, c: '#ff3df2', seed: 7 },
+  { href: '/the-fog', label: 'The Fog', sub: 'demo soon', x: 130, y: 440, rx: 112, ry: 62, c: '#cfe3e8', seed: 11 },
+  { href: '/trust-me-bro', label: 'Trust Me Bro', sub: 'still hammering', x: 385, y: 480, rx: 135, ry: 66, c: '#f5ff3d', seed: 5 },
+  { href: '/door', label: 'Front Door', sub: 'say hi', x: 650, y: 410, rx: 128, ry: 64, c: '#2ef2ff', seed: 9 },
+  { label: 'Library', sub: 'locked · devlog', x: 625, y: 580, rx: 112, ry: 50, c: '#8a83a0', seed: 13 },
 ];
+
+// Mycelium threads between pods (indexes into chambers; -1 = the way in from above).
+const threads: [number, number][] = [[-1, 0], [-1, 1], [0, 2], [0, 3], [1, 4], [3, 4], [4, 5], [0, 1]];
+
+// Seeded wobbly closed blob through n points around an ellipse.
+function blob(cx: number, cy: number, rx: number, ry: number, seed: number) {
+  let s = seed;
+  const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+  const n = 9;
+  const pts = Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    const k = 0.88 + rnd() * 0.24;
+    return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
+  });
+  const f = (p: number[]) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
+  let d = `M${f(pts[0])}`;
+  for (let i = 0; i < n; i++) {
+    const [p0, p1, p2, p3] = [pts[(i - 1 + n) % n], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C${f(c1)} ${f(c2)} ${f(p2)}`;
+  }
+  return d + 'Z';
+}
+
+const thread = ([a, b]: [number, number], i: number) => {
+  const A = a < 0 ? { x: 400, y: -20 } : chambers[a];
+  const B = chambers[b];
+  const mx = (A.x + B.x) / 2 + (i % 2 ? 40 : -40);
+  const my = (A.y + B.y) / 2 + (i % 3 ? -30 : 30);
+  return `M${A.x} ${A.y} Q${mx} ${my} ${B.x} ${B.y}`;
+};
 ---
 
 <Room title="Gnoblin's Den | Game is a trip" bare>
   <section class="entrance" aria-label="Entrance">
     <div class="entrance-stage">
       <p class="sign sign-name fade">Gnoblin's Den</p>
-      <img class="hole" src="/art/hole.svg" alt="A small, unremarkable burrow" width="360" height="252" />
+
+      <div class="burrow">
+        <svg class="mound fade" viewBox="0 0 600 260" aria-hidden="true">
+          <path
+            d="M0 262 C30 170 150 50 300 38 C450 50 570 170 600 262Z"
+            fill="#2b2018"
+            stroke="#121014"
+            stroke-width="5"
+            stroke-linejoin="round"
+          />
+          <path d="M60 230 C120 210 180 220 240 236 M360 240 C420 220 500 214 548 232" stroke="#3a2b20" stroke-width="6" fill="none" stroke-linecap="round" />
+          <g stroke="#121014" stroke-width="3.5" fill="#55663a" stroke-linejoin="round">
+            <path d="M150 104 l6 -22 l5 20 l7 -26 l5 28Z" />
+            <path d="M418 98 l5 -18 l6 17 l6 -22 l4 24Z" />
+            <path d="M262 46 l4 -14 l5 13 l5 -16 l3 17Z" />
+          </g>
+          <g stroke="#121014" stroke-width="3.5" fill="#6f6249">
+            <path d="M486 196 c0 -14 22 -14 22 0Z" /><path d="M495 196 v12" />
+            <path d="M96 210 c0 -10 16 -10 16 0Z" /><path d="M102 210 v9" />
+          </g>
+          <ellipse cx="210" cy="250" rx="18" ry="9" fill="#4a3b30" stroke="#121014" stroke-width="3.5" />
+        </svg>
+        <img class="hole" src="/art/hole.svg" alt="A small, unremarkable burrow" width="360" height="252" />
+      </div>
+
       <a class="sign sign-enter fade" href="#map">Enter ↓</a>
+
+      <svg class="ground fade" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path d="M0 200 V96 C180 80 360 104 600 92 C840 80 1020 102 1200 90 V200Z" fill="#1f1712" stroke="#121014" stroke-width="5" />
+        <g stroke="#121014" stroke-width="3.5" fill="#4a5a30" stroke-linejoin="round">
+          <path d="M70 96 l5 -20 l5 18 l6 -24 l4 26Z" />
+          <path d="M300 100 l4 -16 l5 15 l5 -20 l4 21Z" />
+          <path d="M880 90 l5 -18 l5 16 l6 -22 l4 24Z" />
+          <path d="M1120 92 l4 -16 l5 15 l5 -18 l3 19Z" />
+        </g>
+        <g stroke="#121014" stroke-width="4" stroke-linejoin="round">
+          <path d="M930 150 C950 104 990 90 1010 98 C1000 120 986 140 990 162Z" fill="#7a2f28" />
+          <path d="M924 156 C950 170 990 170 1004 162" fill="none" />
+        </g>
+        <ellipse cx="190" cy="150" rx="26" ry="13" fill="#4a3b30" stroke="#121014" stroke-width="4" />
+        <ellipse cx="236" cy="160" rx="14" ry="8" fill="#4a3b30" stroke="#121014" stroke-width="3.5" />
+        <path d="M520 130 c18 -8 30 6 50 -2 M640 150 c12 6 24 -4 36 2" stroke="#3a2b20" stroke-width="5" fill="none" stroke-linecap="round" />
+      </svg>
+
       <a class="sign sign-wishlist fade" href={signCta.href}>{signCta.label} →</a>
     </div>
   </section>
 
-  <section id="map" class="map-room den">
+  <section id="map" class="map-room">
     <div class="wrap">
-      <header>
+      <header class="map-head">
         <h1 class="display">Welcome to the Den.</h1>
-        <p class="lede">
+        <p class="lede ink-note">
           Gnoblin's Den makes weird little multiplayer games for you and your friends. Pick a room. Mind the
           mushrooms.
         </p>
       </header>
-      <svg class="burrow-map" viewBox="0 0 800 620" role="group" aria-label="Map of the den">
-        <g class="tunnel">
-          <path d="M400 0 V110 Q400 140 340 170" />
-          <path d="M400 110 Q420 150 500 170" />
-          <path d="M220 280 Q180 380 130 430" />
-          <path d="M260 280 Q320 400 340 480" />
-          <path d="M590 270 Q620 340 620 380" />
-          <path d="M630 460 Q640 500 640 530" />
-        </g>
-        {
-          chambers.map((ch) => {
-            const body = (
-              <>
-                <ellipse cx={ch.x} cy={ch.y} rx={ch.rx} ry="56" />
-                <text x={ch.x} y={ch.y - 2}>{ch.label}</text>
-                <text class="sub" x={ch.x} y={ch.y + 26}>{ch.sub}</text>
-              </>
-            );
-            return ch.href ? (
-              <a class="chamber" href={ch.href} style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
-                {body}
-              </a>
-            ) : (
-              <g class="chamber locked" role="img" style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
-                {body}
-              </g>
-            );
-          })
-        }
-      </svg>
+
+      <div class="map-stage">
+        <Prop name="mushroom-acid" x="-2%" y="2%" size={84} rotate={-12} />
+        <Prop name="potion-cyan" x="90%" y="-2%" size={70} rotate={10} hideSmall />
+        <Prop name="crystal" x="46%" y="50%" size={62} rotate={6} hideSmall />
+        <Prop name="eyeball" x="-1%" y="62%" size={56} rotate={-8} hideSmall />
+        <Prop name="duck" x="91%" y="74%" size={64} rotate={12} hideSmall />
+        <Prop name="die" x="20%" y="86%" size={54} rotate={-20} hideSmall />
+        <Prop name="gnome-hat" x="47%" y="16%" size={58} rotate={18} hideSmall />
+
+        <svg class="den-map" viewBox="0 0 800 640" role="group" aria-label="Map of the den">
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="5" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <g class="threads" filter="url(#glow)">
+            {threads.map((t, i) => <path d={thread(t, i)} />)}
+          </g>
+          {
+            chambers.map((ch) => {
+              const d = blob(ch.x, ch.y, ch.rx, ch.ry, ch.seed);
+              const body = (
+                <>
+                  <path class="pod-ink" d={d} />
+                  <path class="pod" d={d} />
+                  <text class="pod-label" x={ch.x} y={ch.y + 2}>{ch.label}</text>
+                  <text class="pod-sub" x={ch.x} y={ch.y + 30}>{ch.sub}</text>
+                </>
+              );
+              return ch.href ? (
+                <a class="chamber" href={ch.href} style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
+                  {body}
+                </a>
+              ) : (
+                <g class="chamber locked" role="img" style={`--c:${ch.c}`} aria-label={`${ch.label}: ${ch.sub}`}>
+                  {body}
+                </g>
+              );
+            })
+          }
+        </svg>
+      </div>
+
       <ul class="room-list">
         {
           chambers.filter((ch) => ch.href).map((ch) => (

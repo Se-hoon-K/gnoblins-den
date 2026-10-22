@@ -1,16 +1,15 @@
-/* Per-game worlds. Used by the display case interior and by the game's own room page.
+/* Per-game worlds for the display-case interiors. Game room pages get the game's colours
+   through the spore haze (--haze-* in src/data/games.ts).
    To add a game: copy one block and change the data-game value. */
 
 /* ---------- The Fog: cold, desaturated, drifting fog, flashlight ---------- */
-[data-game='the-fog'] .case-interior,
-body[data-game='the-fog'] .game-room {
+[data-game='the-fog'] .case-interior {
   background:
     radial-gradient(30% 45% at 30% 60%, #fff5d826, transparent 70%),
     radial-gradient(80% 50% at 50% 100%, #9fb3ba40, transparent 70%),
     linear-gradient(180deg, #05080a, #0f171b);
 }
-[data-game='the-fog'] .case-interior::before,
-body[data-game='the-fog'] .game-room::before {
+[data-game='the-fog'] .case-interior::before {
   content: '';
   position: absolute;
   inset: -20%;
@@ -39,8 +38,7 @@ body[data-game='the-fog'] .game-room::before {
 [data-game='the-fog'] .case:hover .leak:nth-of-type(2) { translate: 25% 20%; }
 
 /* ---------- Trust Me Bro: casino neon, stock ticker, coins ---------- */
-[data-game='trust-me-bro'] .case-interior,
-body[data-game='trust-me-bro'] .game-room {
+[data-game='trust-me-bro'] .case-interior {
   background:
     repeating-linear-gradient(0deg, #ff3df21a 0 1px, transparent 1px 32px),
     repeating-linear-gradient(90deg, #ff3df21a 0 1px, transparent 1px 32px),

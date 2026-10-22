@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><!-- PLACEHOLDER prop: swap 1:1 -->
+<ellipse cx="50" cy="82" rx="34" ry="10" fill="#c99a16" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M16 82 v-8 C16 66 84 66 84 74 v8" fill="#f5ff3d" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="50" cy="66" rx="30" ry="9" fill="#f5ff3d" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 66 v-10 C22 48 78 48 78 56 v10" fill="#f5ff3d" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="50" cy="52" rx="26" ry="8" fill="#ffe14a" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M44 52 h12 M50 48 v8" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="74" cy="30" rx="10" ry="10" fill="#f5ff3d" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M70 30 h8" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>
