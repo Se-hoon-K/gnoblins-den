@@ -1,0 +1,269 @@
+---
+import Room from '../layouts/Room.astro';
+import CtaPair from '../components/CtaPair.astro';
+import { games } from '../data/games';
+
+const game = games.find((g) => g.slug === 'trust-me-bro')!;
+const symbols = ['🍄', '💰', '🤡', '🚀', '📉', '🪙', '💎'];
+---
+
+<Room title={`${game.name} | Gnoblin's Den`} description={`${game.name}: ${game.tagline}`} game={game.slug} theme={game.theme}>
+  <div class="tmb-page">
+    <div class="tape" aria-hidden="true"><span>{game.ticker?.repeat(4)}</span></div>
+
+    <section class="tmb-hero wrap">
+      <div class="tmb-intro">
+        <p class="tmb-kicker">NYSE: <s>REAL</s> $TMB · Gnoblin's Den</p>
+        <h1 class="tmb-title">{game.name}</h1>
+        <p class="tmb-tagline">{game.tagline}</p>
+        <ul class="tmb-stats">
+          <li><span>Players</span>{game.players}</li>
+          <li><span>Session</span>{game.session}</li>
+          <li><span>Status</span>{game.status}</li>
+        </ul>
+        <p class="tmb-blurb">{game.blurb}</p>
+        <CtaPair game={game} wishJoke="BUY THE DIP" discordJoke="JOIN THE PUMP GROUP" class="tmb-cta" />
+      </div>
+
+      <div class="tmb-desk">
+        <div class="panel chart-panel">
+          <div class="panel-head">
+            <span>$BRO / VIBES</span>
+            <span class="price" aria-live="off"><b class="price-now">4.20</b> <i class="price-change">+0.00%</i></span>
+          </div>
+          <canvas class="chart" width="600" height="260" aria-label="A fake, extremely volatile price chart" role="img"></canvas>
+        </div>
+
+        <div class="panel slots">
+          <div class="panel-head"><span>BRO SLOTS™</span><span>NOT FINANCIAL ADVICE</span></div>
+          <div class="reels" aria-hidden="true">
+            <span class="reel">🍄</span><span class="reel">💰</span><span class="reel">🤡</span>
+          </div>
+          <button class="pull" type="button">PULL</button>
+          <p class="slot-result" aria-live="polite">Feeling lucky, bro?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tmb-section wrap">
+      <figure class="marquee">
+        {
+          game.trailer ? (
+            <iframe src={game.trailer} title={`${game.name} trailer`} allowfullscreen loading="lazy" />
+          ) : (
+            <div class="marquee-empty">
+              <span>{game.name}</span>
+              <small>[trailer / key art goes here]</small>
+            </div>
+          )
+        }
+      </figure>
+    </section>
+
+    {
+      game.screenshots.length > 0 && (
+        <section class="tmb-section wrap">
+          <h2 class="tmb-h2">Your portfolio</h2>
+          <div class="portfolio">
+            {game.screenshots.map((s) => (
+              <figure class="holding">
+                <img src={s.src} alt={s.alt} loading="lazy" />
+                {s.caption && (
+                  <figcaption class:list={[s.caption.startsWith('-') ? 'down' : 'up']}>
+                    {s.caption.startsWith('-') ? '▼' : '▲'} {s.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      game.news.length > 0 && (
+        <section class="tmb-section wrap">
+          <h2 class="tmb-h2">Market news</h2>
+          <ul class="news">
+            {game.news.map((n) => (
+              <li>
+                <span class="breaking">BREAKING</span>
+                <time>{n.date}</time>
+                <strong>{n.title}</strong>
+                <p>{n.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="tmb-section wrap tmb-end">
+      <CtaPair game={game} wishJoke="LAST CHANCE TO GET IN EARLY" discordJoke="TRUST ME BRO" class="tmb-cta" />
+      <a class="tmb-back" href="/#map">← cash out, back to the den</a>
+    </section>
+  </div>
+</Room>
+
+<script define:vars={{ symbols }}>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fake $BRO price: a random walk with sudden pumps and rug pulls.
+  const canvas = document.querySelector('.chart');
+  const nowEl = document.querySelector('.price-now');
+  const chEl = document.querySelector('.price-change');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const N = 120;
+    const open = 4.2;
+    let prices = Array.from({ length: N }, (_, i) => open + Math.sin(i / 9) * 0.4);
+    let v = 0;
+    const next = () => {
+      let p = prices[prices.length - 1];
+      v = v * 0.9 + (Math.random() - 0.48) * 0.12;
+      const roll = Math.random();
+      if (roll < 0.015) v += 1.2; // pump
+      else if (roll < 0.025) v -= p * 0.6; // rug
+      p = Math.max(0.05, p + v);
+      prices.push(p);
+      prices.shift();
+    };
+    const draw = () => {
+      const w = canvas.width, h = canvas.height;
+      const min = Math.min(...prices) * 0.95, max = Math.max(...prices) * 1.05;
+      const y = (p) => h - ((p - min) / (max - min)) * h;
+      const last = prices[prices.length - 1];
+      const up = last >= open;
+      const col = up ? '#b6ff2e' : '#ff3b3b';
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = '#ff3df222';
+      ctx.lineWidth = 1;
+      for (let gy = 0; gy < h; gy += 52) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+      ctx.beginPath();
+      prices.forEach((p, i) => { const x = (i / (N - 1)) * w; i ? ctx.lineTo(x, y(p)) : ctx.moveTo(x, y(p)); });
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 4;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, up ? '#b6ff2e44' : '#ff3b3b44');
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.fill();
+      const pct = ((last - open) / open) * 100;
+      nowEl.textContent = last.toFixed(2);
+      chEl.textContent = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
+      chEl.className = `price-change ${up ? 'up' : 'down'}`;
+    };
+    for (let i = 0; i < N; i++) next();
+    draw();
+    if (!reduce) setInterval(() => { next(); draw(); }, 220);
+  }
+
+  // Slot machine.
+  const reels = [...document.querySelectorAll('.reel')];
+  const pull = document.querySelector('.pull');
+  const result = document.querySelector('.slot-result');
+  const pick = () => symbols[Math.floor(Math.random() * symbols.length)];
+  const verdict = (r) => {
+    if (r[0] === r[1] && r[1] === r[2]) return 'JACKPOT. Told you. Trust me bro.';
+    if (r.includes('📉')) return 'RUG PULLED. Skill issue.';
+    if (r.includes('🚀')) return 'TO THE MOON 🚀 (probably)';
+    if (r.includes('🤡')) return 'Bro got clowned.';
+    return ['Down bad. Pull again.', 'Diamond hands, bro.', 'This is fine.', 'Almost. Literally almost.'][Math.floor(Math.random() * 4)];
+  };
+  pull?.addEventListener('click', () => {
+    if (pull.disabled) return;
+    const final = reels.map(pick);
+    if (reduce) {
+      reels.forEach((el, i) => (el.textContent = final[i]));
+      result.textContent = verdict(final);
+      return;
+    }
+    pull.disabled = true;
+    result.textContent = 'Spinning…';
+    reels.forEach((el, i) => {
+      el.classList.add('spinning');
+      const t = setInterval(() => (el.textContent = pick()), 70);
+      setTimeout(() => {
+        clearInterval(t);
+        el.textContent = final[i];
+        el.classList.remove('spinning');
+        if (i === reels.length - 1) {
+          result.textContent = verdict(final);
+          pull.disabled = false;
+        }
+      }, 700 + i * 350);
+    });
+  });
+</script>
+
+<style>
+  .tmb-page { position: relative; color: #fff3fd; }
+  .tape { position: relative; z-index: 3; overflow: hidden; white-space: nowrap; background: #000; border-block: 2px solid #ff3df2; font: 400 0.95rem/2.2 'Space Mono', monospace; color: #b6ff2e; }
+  .tape span { display: inline-block; animation: tape 30s linear infinite; }
+  @keyframes tape { to { translate: -50%; } }
+
+  .tmb-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 40px; align-items: center; padding: 56px 0 32px; }
+  .tmb-kicker { font: 400 0.9rem 'Space Mono', monospace; color: #ff9cf7; margin: 0 0 8px; }
+  .tmb-title { font: 400 clamp(3rem, 10vw, 6rem)/0.95 'Bungee', sans-serif; margin: 0 0 14px; color: #ff3df2; text-shadow: 0 0 24px #ff3df2aa, 5px 5px 0 #f5ff3d; }
+  .tmb-tagline { font: 400 clamp(1.2rem, 3vw, 1.6rem) 'Bungee', sans-serif; color: #f5ff3d; margin: 0 0 18px; }
+  .tmb-stats { list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px; font: 400 0.95rem 'Space Mono', monospace; }
+  .tmb-stats li { padding: 6px 10px; background: #0008; border: 1px solid #ff3df2; }
+  .tmb-stats span { color: #ff9cf7; margin-right: 8px; }
+  .tmb-blurb { max-width: 56ch; margin: 0 0 28px; }
+
+  .tmb-page :global(.cta-joke) { font: 400 0.8rem 'Space Mono', monospace; color: #f5ff3d; opacity: 1; }
+  .tmb-page :global(.cta-btn) { font: 400 1.05rem 'Bungee', sans-serif; color: #14001c; background: #b6ff2e; border: 3px solid #000; box-shadow: 5px 5px 0 #ff3df2; transition: translate 0.1s, box-shadow 0.1s; }
+  .tmb-page :global(.cta-btn:hover) { translate: -2px -2px; box-shadow: 7px 7px 0 #ff3df2; }
+  .tmb-page :global(.cta-discord) { background: #f5ff3d; }
+  .tmb-page :global(.cta-btn.is-soon) { background: #2a0a33; color: #ff9cf7; box-shadow: 5px 5px 0 #000; }
+
+  .tmb-desk { display: grid; gap: 20px; }
+  .panel { background: #0a0010e6; border: 2px solid #ff3df2; box-shadow: 0 0 30px #ff3df240, 6px 6px 0 #000; }
+  .panel-head { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; border-bottom: 2px solid #ff3df255; font: 400 0.85rem 'Space Mono', monospace; color: #ff9cf7; }
+  .price b { color: #fff; font-size: 1.1rem; }
+  .price i { font-style: normal; }
+  .price :global(.up) { color: #b6ff2e; }
+  .price :global(.down) { color: #ff3b3b; }
+  .chart { display: block; width: 100%; height: auto; }
+
+  .slots { text-align: center; padding-bottom: 16px; }
+  .reels { display: flex; justify-content: center; gap: 12px; padding: 20px 12px 14px; }
+  .reel { display: grid; place-items: center; width: 84px; height: 96px; font-size: 3rem; background: #fff3fd; border: 3px solid #000; border-radius: 8px; box-shadow: inset 0 -10px 0 #0002, 0 0 0 3px #f5ff3d; }
+  .reel.spinning { filter: blur(1.5px); }
+  .pull { font: 400 1.2rem 'Bungee', sans-serif; padding: 10px 28px; color: #14001c; background: #ff3df2; border: 3px solid #000; box-shadow: 4px 4px 0 #f5ff3d; cursor: pointer; }
+  .pull:active { translate: 2px 2px; box-shadow: 2px 2px 0 #f5ff3d; }
+  .pull:disabled { opacity: 0.6; cursor: wait; }
+  .slot-result { margin: 12px 0 0; font: 400 1rem 'Space Mono', monospace; color: #f5ff3d; min-height: 1.6em; }
+
+  .tmb-section { padding: 40px 0; }
+  .tmb-h2 { font: 400 clamp(1.8rem, 5vw, 2.6rem)/1 'Bungee', sans-serif; color: #f5ff3d; margin: 0 0 24px; }
+
+  .marquee { position: relative; margin: 0; aspect-ratio: 16 / 9; padding: 18px; background: #2a0a33; border: 3px solid #000; box-shadow: 0 0 40px #ff3df255; }
+  .marquee::before { content: ''; position: absolute; inset: 6px; border-radius: 6px; background: radial-gradient(circle, #f5ff3d 0 3px, transparent 4px) 0 0 / 22px 22px; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); padding: 6px; animation: bulbs 0.8s steps(2) infinite; }
+  @keyframes bulbs { 50% { opacity: 0.4; } }
+  .marquee iframe, .marquee-empty { position: relative; width: 100%; height: 100%; border: 0; }
+  .marquee-empty { display: grid; place-content: center; gap: 10px; text-align: center; background: radial-gradient(70% 60% at 50% 40%, #5b0a6b, #14001c 70%); }
+  .marquee-empty span { font: 400 clamp(2.2rem, 7vw, 4.5rem) 'Bungee', sans-serif; color: #f5ff3d; text-shadow: 0 0 16px #ff3df2, 4px 4px 0 #ff3df2; }
+  .marquee-empty small { font-family: 'Space Mono', monospace; color: #ff9cf7; }
+
+  .portfolio { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px; }
+  .holding { margin: 0; background: #0a0010; border: 2px solid #ff3df2; box-shadow: 6px 6px 0 #000; }
+  .holding img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .holding figcaption { padding: 8px 12px; font: 400 1.1rem 'Space Mono', monospace; border-top: 2px solid #ff3df255; }
+  .holding .up { color: #b6ff2e; }
+  .holding .down { color: #ff3b3b; }
+
+  .news { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .news li { padding: 16px 18px; background: #0a0010e6; border-left: 6px solid #ff3b3b; font-family: 'Space Mono', monospace; }
+  .breaking { display: inline-block; padding: 2px 8px; margin-right: 10px; background: #ff3b3b; color: #fff; font-weight: 700; font-size: 0.8rem; animation: blink 1.2s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0.35; } }
+  .news time { color: #ff9cf7; font-size: 0.85rem; }
+  .news strong { display: block; margin: 8px 0 4px; color: #f5ff3d; font: 400 1.15rem 'Bungee', sans-serif; }
+  .news p { margin: 0; color: #e8d6ec; }
+
+  .tmb-end { display: grid; gap: 28px; justify-items: start; padding-bottom: 80px; }
+  .tmb-back { color: #ff9cf7; font-family: 'Space Mono', monospace; }
+</style>

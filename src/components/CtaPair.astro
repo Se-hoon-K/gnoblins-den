@@ -1,0 +1,31 @@
+---
+// Wishlist + Discord side by side with equal weight. Optional small joke lines above each.
+import { type Game } from '../data/games';
+import { links } from '../data/links';
+
+interface Props {
+  game: Game;
+  wishJoke?: string;
+  discordJoke?: string;
+  class?: string;
+}
+const { game, wishJoke, discordJoke, class: cls } = Astro.props;
+const wishLabel = game.demoLive ? 'Play the demo' : 'Wishlist on Steam';
+---
+
+<div class:list={['cta-pair', cls]}>
+  <div class="cta">
+    {wishJoke && <span class="cta-joke">{wishJoke}</span>}
+    {
+      game.steamUrl ? (
+        <a class="cta-btn cta-steam" href={game.steamUrl}>{wishLabel}</a>
+      ) : (
+        <span class="cta-btn cta-steam is-soon">Coming to Steam</span>
+      )
+    }
+  </div>
+  <div class="cta">
+    {discordJoke && <span class="cta-joke">{discordJoke}</span>}
+    <a class="cta-btn cta-discord" href={links.discord}>Join the Discord</a>
+  </div>
+</div>

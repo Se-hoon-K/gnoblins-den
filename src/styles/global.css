@@ -435,3 +435,10 @@ img { max-width: 100%; display: block; }
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Wishlist + Discord pair (skinned per game page). */
+.cta-pair { display: flex; flex-wrap: wrap; gap: 16px 20px; align-items: flex-end; }
+.cta { display: grid; gap: 6px; justify-items: start; }
+.cta-joke { font: 400 0.95rem/1 var(--font-hand); opacity: 0.8; }
+.cta-btn { display: inline-block; padding: 0.8em 1.4em; text-decoration: none; font-weight: 700; }
+.cta-btn.is-soon { cursor: default; opacity: 0.75; }

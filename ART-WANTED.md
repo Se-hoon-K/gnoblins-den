@@ -17,3 +17,8 @@ Mood for the whole den: **an unassuming burrow outside, a psychedelic goblin & g
 ## Game styles
 - **The Fog**: 4-player co-op horror escape. Cold, desaturated blue-grey, thick drifting fog, flashlight glow.
 - **Trust Me Bro**: multiplayer gambling/investing chaos. Casino neon, stock tickers, coins, unhinged energy.
+
+## Game page assets
+- Screenshots: placeholders in `public/art/games/<game>/shot-*.svg`. Replace them with real captures (WebP, 4:3) and update `screenshots` in `src/data/games.ts`. The captions are jokes in the game's voice.
+- Trailer: set `trailer` (YouTube embed URL) in `src/data/games.ts`. It replaces the key-art placeholder.
+- The Fog's hidden wall scrawls/handprints/figures are drawn in `src/pages/the-fog.astro`. An artist could redo them as SVGs.

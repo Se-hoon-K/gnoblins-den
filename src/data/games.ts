@@ -16,7 +16,8 @@ export interface Game {
   steamUrl?: string;
   demoLive?: boolean;
   trailer?: string; // YouTube embed URL
-  screenshots: { src: string; alt: string }[];
+  screenshots: { src: string; alt: string; caption?: string }[];
+  news: { date: string; title: string; body: string }[]; // newest first; dev updates + playtest calls
   ticker?: string;
   theme: Record<string, string>; // bg, text, accent, game-font, haze-1..4, haze-strength
 }
@@ -35,7 +36,16 @@ export const games: Game[] = [
     blurb:
       '[Short pitch: what you do, why it is scary, why it is better with friends.]',
     features: ['[Feature one]', '[Feature two]', '[Feature three]'],
-    screenshots: [],
+    // PLACEHOLDER shots: replace with real captures.
+    screenshots: [
+      { src: '/art/games/the-fog/shot-1.svg', alt: '[Screenshot: the group at the edge of the fog]', caption: 'day 3' },
+      { src: '/art/games/the-fog/shot-2.svg', alt: '[Screenshot: something standing in the trees]', caption: 'who took this?' },
+      { src: '/art/games/the-fog/shot-3.svg', alt: '[Screenshot: the gate out]', caption: 'the way out??' },
+    ],
+    news: [
+      { date: '[2026-10-20]', title: '[Demo is almost ready]', body: '[Placeholder: a short update about the Steam demo.]' },
+      { date: '[2026-09-02]', title: '[Playtest #1 done]', body: '[Placeholder: what you learned, and how to join the next one on Discord.]' },
+    ],
     theme: {
       bg: '#0b1013',
       text: '#dfe7ea',
@@ -45,18 +55,18 @@ export const games: Game[] = [
       'haze-2': '#cfe3e8',
       'haze-3': '#6f8a94',
       'haze-4': '#dfe7ea',
-      'haze-strength': '0.8',
+      'haze-strength': '0.55',
       // Thick, slow fog that hangs around. The cursor is a flashlight that pushes it aside.
       'haze-flashlight': '1',
       'haze-mouse-dye': '0',
       'haze-mouse-force': '2500',
-      'haze-fade': '0.06',
+      'haze-fade': '0.18',
       'haze-curl': '4',
       'haze-ambient-every': '500',
-      'haze-ambient-dye': '0.18',
+      'haze-ambient-dye': '0.09',
       'haze-ambient-force': '60',
       'haze-ambient-radius': '3',
-      'haze-seed': '30',
+      'haze-seed': '18',
       'haze-spore-count': '0.35',
       'haze-spore-gravity': '0.06',
       'haze-spore-size': '0.8',
@@ -75,7 +85,15 @@ export const games: Game[] = [
     blurb:
       '[Short pitch: you and your friends trade, bet and backstab for 30 unhinged minutes.]',
     features: [],
-    screenshots: [],
+    // PLACEHOLDER shots: replace with real captures.
+    screenshots: [
+      { src: '/art/games/trust-me-bro/shot-1.svg', alt: '[Screenshot: the trading floor]', caption: '+420.69%' },
+      { src: '/art/games/trust-me-bro/shot-2.svg', alt: '[Screenshot: a friend getting rugged]', caption: '-99.00%' },
+      { src: '/art/games/trust-me-bro/shot-3.svg', alt: '[Screenshot: the slot pit]', caption: '+69.00%' },
+    ],
+    news: [
+      { date: '[2026-10-12]', title: '[First playable build]', body: '[Placeholder: what works so far.]' },
+    ],
     ticker: 'TMB ▲ 420% · RUG ▼ 99% · HOPIUM ▲ ∞ · BRO ▲ 69% · COPIUM ▼ 12% · ',
     theme: {
       bg: '#14001c',

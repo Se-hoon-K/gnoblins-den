@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><!-- PLACEHOLDER screenshot -->
+<rect width="400" height="300" fill="#14001c"/>
+<g stroke="#ff3df2" stroke-opacity=".18"><path d="M0 60 H400 M0 120 H400 M0 180 H400 M0 240 H400 M80 0 V300 M160 0 V300 M240 0 V300 M320 0 V300"/></g>
+<path d="M10 60 L70 70 L120 50 L170 80 L210 70 L240 260 L390 280" fill="none" stroke="#ff3b3b" stroke-width="6" stroke-linejoin="round"/><text x="250" y="140" font-family="monospace" font-size="30" fill="#ff3b3b">RUGGED</text></svg>

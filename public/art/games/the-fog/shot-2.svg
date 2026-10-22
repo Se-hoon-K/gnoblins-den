@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><!-- PLACEHOLDER screenshot -->
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2428"/><stop offset="1" stop-color="#5d6c71"/></linearGradient>
+<radialGradient id="f" cx=".5" cy=".75" r=".7"><stop offset="0" stop-color="#cfd9dc" stop-opacity=".7"/><stop offset="1" stop-color="#cfd9dc" stop-opacity="0"/></radialGradient></defs>
+<rect width="400" height="300" fill="url(#g)"/>
+<g fill="#0b1013" opacity=".85"><path d="M20 300 V120 l10 -40 l10 40 V300Z"/><path d="M70 300 V90 l14 -50 l14 50 V300Z"/><path d="M320 300 V100 l12 -45 l12 45 V300Z"/><path d="M360 300 V130 l9 -35 l9 35 V300Z"/></g>
+<g fill="#06090b" opacity=".75"><circle cx="230" cy="130" r="9"/><rect x="224" y="138" width="12" height="90" rx="5"/><rect x="214" y="146" width="5" height="70" rx="2"/><rect x="241" y="146" width="5" height="70" rx="2"/></g><circle cx="227" cy="128" r="1.6" fill="#e8c55a"/><circle cx="233" cy="128" r="1.6" fill="#e8c55a"/>
+<rect width="400" height="300" fill="url(#f)"/></svg>
