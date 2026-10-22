@@ -1,30 +1,43 @@
 ---
+// A crew member as a WANTED poster pinned to the wall.
 interface Props {
   name: string;
   title: string;
   role: string;
   color: string;
   avatar?: string;
+  wantedFor: string;
+  reward: string;
+  tilt?: number;
 }
-const { name, title, role, color, avatar } = Astro.props;
+const { name, title, role, color, avatar, wantedFor, reward, tilt = 0 } = Astro.props;
 ---
 
-<article class="crew-card" style={`--c:${color}`}>
-  {
-    avatar ? (
-      <img class="avatar" src={avatar} alt="" />
-    ) : (
-      <svg class="avatar" viewBox="0 0 120 140" aria-hidden="true">
-        <path d="M60 4 L94 68 H26 Z" fill="var(--c)" />
-        <ellipse cx="60" cy="70" rx="40" ry="7" fill="var(--c)" opacity=".7" />
-        <ellipse cx="60" cy="100" rx="34" ry="32" fill="#8fd11f" />
-        <circle cx="47" cy="96" r="7" fill="#0d0b12" />
-        <circle cx="73" cy="96" r="7" fill="#0d0b12" />
-        <path d="M46 114 Q60 124 74 114" stroke="#0d0b12" stroke-width="4" fill="none" stroke-linecap="round" />
-      </svg>
-    )
-  }
-  <h2>{name}</h2>
-  <p class="crew-title">{title}</p>
-  <p class="crew-role">{role}</p>
+<article class="wanted" style={`--c:${color};--tilt:${tilt}deg`}>
+  <span class="pin" aria-hidden="true"></span>
+  <p class="wanted-head" aria-hidden="true">WANTED</p>
+  <div class="wanted-portrait">
+    {
+      avatar ? (
+        <img src={avatar} alt="" />
+      ) : (
+        <svg viewBox="0 0 120 140" aria-hidden="true">
+          <path d="M60 4 L94 68 H26 Z" fill="var(--c)" stroke="#121014" stroke-width="4" stroke-linejoin="round" />
+          <ellipse cx="60" cy="70" rx="40" ry="7" fill="var(--c)" stroke="#121014" stroke-width="4" />
+          <path d="M16 86 L30 94 L24 102Z M104 86 L90 94 L96 102Z" fill="#8fd11f" stroke="#121014" stroke-width="3.5" stroke-linejoin="round" />
+          <ellipse cx="60" cy="100" rx="34" ry="32" fill="#8fd11f" stroke="#121014" stroke-width="4" />
+          <circle cx="47" cy="96" r="7" fill="#121014" /><circle cx="73" cy="96" r="7" fill="#121014" />
+          <circle cx="49" cy="94" r="2.2" fill="#f5ff3d" /><circle cx="75" cy="94" r="2.2" fill="#f5ff3d" />
+          <path d="M46 114 Q60 124 74 114" stroke="#121014" stroke-width="4" fill="none" stroke-linecap="round" />
+        </svg>
+      )
+    }
+  </div>
+  <h2 class="wanted-name">{name}</h2>
+  <p class="wanted-title">{title}</p>
+  <p class="wanted-role">{role}</p>
+  <dl class="wanted-small">
+    <div><dt>Wanted for</dt><dd>{wantedFor}</dd></div>
+    <div><dt>Reward</dt><dd>{reward}</dd></div>
+  </dl>
 </article>

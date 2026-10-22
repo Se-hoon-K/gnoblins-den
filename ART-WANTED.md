@@ -22,3 +22,7 @@ Mood for the whole den: **an unassuming burrow outside, a psychedelic goblin & g
 - Screenshots: placeholders in `public/art/games/<game>/shot-*.svg`. Replace them with real captures (WebP, 4:3) and update `screenshots` in `src/data/games.ts`. The captions are jokes in the game's voice.
 - Trailer: set `trailer` (YouTube embed URL) in `src/data/games.ts`. It replaces the key-art placeholder.
 - The Fog's hidden wall scrawls/handprints/figures are drawn in `src/pages/the-fog.astro`. An artist could redo them as SVGs.
+
+## Crew Quarters & Front Door
+- Crew portraits for the WANTED posters: set `avatar` per member in `src/data/crew.ts` (transparent PNG/WebP, square, 240×240). Each member is a psychedelic goblin or gnome.
+- Hammocks (`src/pages/crew.astro`) and the round goblin door (`src/pages/door.astro`) are drawn inline as placeholders and could be redone as illustrations.

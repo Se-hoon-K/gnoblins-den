@@ -1,18 +1,39 @@
 ---
 import Room from '../layouts/Room.astro';
 import CrewCard from '../components/CrewCard.astro';
+import Prop from '../components/Prop.astro';
 import { crew } from '../data/crew';
 ---
 
 <Room title="Crew Quarters | Gnoblin's Den">
-  <section class="room den">
+  <section class="room crew-room">
     <div class="wrap">
-      <header>
+      <header class="room-head">
         <h1 class="display">Crew Quarters</h1>
-        <p class="lede">The goblins (and one or two gnomes) behind the games. Please don't feed them after midnight.</p>
+        <p class="lede ink-note">The goblins (and one or two gnomes) behind the games. Please don't feed them after midnight.</p>
       </header>
-      <div class="crew">
-        {crew.map((m) => <CrewCard {...m} />)}
+
+      <!-- Hammocks strung across the room; someone is asleep in one. -->
+      <div class="hammocks" aria-hidden="true">
+        <svg viewBox="0 0 1000 170">
+          <g stroke="#121014" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10 V170 M480 10 V170 M960 10 V170" stroke-width="12" />
+            <path d="M20 30 C120 140 380 140 480 30" fill="#6b3fa0" />
+            <path d="M20 30 C120 105 380 105 480 30" fill="none" stroke="#9a6bd8" stroke-width="4" />
+            <path d="M480 40 C580 150 860 150 960 40" fill="#2a6b6b" />
+            <path d="M480 40 C580 112 860 112 960 40" fill="none" stroke="#2ef2ff" stroke-width="4" />
+            <path d="M160 92 C176 52 214 40 236 46 C228 72 214 90 218 110Z" fill="#ff3df2" />
+            <ellipse cx="250" cy="102" rx="34" ry="16" fill="#8fd11f" />
+          </g>
+        </svg>
+        <span class="zzz"><small>Z</small> Z <big>Z</big></span>
+        <Prop name="lantern" x="46%" y="-30px" size={70} />
+        <Prop name="skull-mug" x="80%" y="88px" size={56} rotate={8} hideSmall />
+        <Prop name="mushroom-tiny" x="3%" y="104px" size={58} hideSmall />
+      </div>
+
+      <div class="wanted-wall">
+        {crew.map((m, i) => <CrewCard {...m} tilt={[-3, 2, -1.5, 3][i % 4]} />)}
       </div>
     </div>
   </section>

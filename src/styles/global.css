@@ -373,32 +373,68 @@ img { max-width: 100%; display: block; }
 .item-stats dd { margin: 0; text-align: right; }
 .item-flavor { font: 400 1.2rem/1.3 var(--font-hand); color: #e8d78f; margin: 14px 0 20px; }
 
-/* Crew */
-.crew { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 24px; }
-.crew-card { background: var(--bg-raised); border-radius: var(--radius); padding: 24px; text-align: center; border: 2px solid color-mix(in srgb, var(--c) 50%, transparent); }
-.crew-card .avatar { width: 140px; height: 140px; margin: 0 auto 12px; }
-.crew-card h2 { font-size: 1.3rem; margin: 0; }
-.crew-title { color: var(--c); font-weight: 600; margin: 4px 0 0; }
-.crew-role { color: var(--muted); margin: 0; }
-
-/* Door */
-.discord-block {
-  display: block;
-  padding: 32px;
-  border-radius: var(--radius);
-  background: linear-gradient(135deg, #4752c4, #6a2bd1 60%, #a0108f);
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 32px;
+/* ---------- Crew Quarters ---------- */
+.hammocks { position: relative; margin: 0 0 48px; }
+.hammocks svg { display: block; width: 100%; height: auto; filter: url(#ink); overflow: visible; }
+.zzz { position: absolute; left: 29%; top: 0; font: 400 clamp(1.1rem, 3vw, 2rem) var(--font-display); color: var(--text); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; rotate: -8deg; }
+.zzz small { font-size: 0.65em; } .zzz big { font-size: 1.35em; }
+.wanted-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 48px 36px; padding: 10px; }
+.wanted {
+  position: relative; isolation: isolate; text-align: center; color: #2b1d12;
+  padding: 26px 22px 22px; rotate: var(--tilt); transition: rotate 0.3s, scale 0.3s;
 }
-.discord-block h2 { font-size: clamp(1.6rem, 5vw, 2.4rem); }
-.discord-block p { margin: 0 0 16px; max-width: 50ch; }
-.discord-block .btn { --accent: #fff; }
-.contact-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; }
-.contact-list a { display: block; padding: 18px 20px; border-radius: var(--radius); background: var(--bg-raised); text-decoration: none; border: 2px solid #ffffff14; }
-.contact-list a:hover { border-color: var(--cyan); }
-.contact-list strong { display: block; font-family: var(--font-heading); }
-.contact-list span { color: var(--muted); font-size: 0.95rem; word-break: break-all; }
+.wanted::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(120% 90% at 50% 40%, #f1e6c8, #d9c79a);
+  border: 4px solid var(--ink); border-radius: 4px 10px 6px 12px;
+  box-shadow: 8px 8px 0 var(--ink), 0 0 34px -8px var(--c);
+  filter: url(#ink);
+}
+.wanted:hover { rotate: 0deg; scale: 1.03; }
+.pin { position: absolute; top: -10px; left: 50%; width: 22px; height: 22px; translate: -50% 0; border-radius: 50%; background: var(--c); border: 3px solid var(--ink); box-shadow: 2px 3px 0 var(--ink); }
+.wanted-head { margin: 0; font: 400 2.6rem/1 var(--font-display); color: #8f2f26; letter-spacing: 0.04em; }
+.wanted-portrait { width: 150px; height: 150px; margin: 12px auto; display: grid; place-items: center; background: #c9b588; border: 4px solid var(--ink); }
+.wanted-portrait svg, .wanted-portrait img { width: 120px; height: 120px; }
+.wanted-name { margin: 0; font: 400 1.8rem/1.1 var(--font-hand); color: #2b1d12; }
+.wanted-title { margin: 2px 0 0; font: 400 1.25rem var(--font-hand); color: #8f2f26; }
+.wanted-role { margin: 0 0 12px; font-weight: 700; }
+.wanted-small { margin: 0; padding-top: 10px; border-top: 2px dashed #2b1d1255; display: grid; gap: 2px; font-size: 0.95rem; }
+.wanted-small div { display: flex; justify-content: space-between; gap: 10px; }
+.wanted-small dt { opacity: 0.7; }
+.wanted-small dd { margin: 0; font-family: var(--font-hand); font-size: 1.1rem; }
+
+/* ---------- Front Door ---------- */
+.door-scene { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 56px; align-items: center; }
+.door { position: relative; max-width: 460px; width: 100%; margin-inline: auto; }
+.door-art { width: 100%; height: auto; filter: url(#ink) drop-shadow(10px 10px 0 var(--ink)); }
+.door-notes { list-style: none; margin: 0; padding: 0; }
+.door-notes li { position: absolute; left: var(--x); top: var(--y); rotate: var(--tilt); z-index: 2; }
+.door-notes a { position: relative; isolation: isolate; display: block; padding: 12px 16px 14px; max-width: 200px; text-decoration: none; color: #2b1d12; transition: scale 0.2s, rotate 0.2s; }
+.door-notes a::before { content: ''; position: absolute; inset: 0; z-index: -1; background: #f1e6c8; border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); filter: url(#ink); }
+.door-notes a::after { content: ''; position: absolute; top: -8px; left: 50%; width: 16px; height: 16px; translate: -50% 0; border-radius: 50%; background: var(--magenta); border: 3px solid var(--ink); }
+.door-notes a:hover { scale: 1.08; rotate: 0deg; }
+.door-notes strong { display: block; font: 400 1.4rem/1.1 var(--font-hand); color: #8f2f26; }
+.door-notes span { font-size: 0.85rem; word-break: break-all; }
+@media (max-width: 600px) {
+  .door-notes { display: grid; gap: 18px; margin-top: 28px; }
+  .door-notes li { position: static; }
+  .door-notes a { max-width: none; }
+}
+
+.portal { position: relative; display: grid; place-items: center; aspect-ratio: 1; max-width: 460px; width: 100%; margin-inline: auto; text-decoration: none; color: var(--text); }
+.portal-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--acid), var(--cyan), var(--magenta), var(--toxic), var(--acid));
+  border: 6px solid var(--ink); box-shadow: 0 0 60px #ff3df288, 0 0 120px #2ef2ff55, 10px 10px 0 var(--ink);
+  filter: url(#ink-strong);
+  animation: portal-spin 12s linear infinite;
+}
+.portal-ring::after { content: ''; position: absolute; inset: 14%; border-radius: 50%; background: radial-gradient(circle, #0d0b12 40%, #2a0f3a 70%, transparent 72%); border: 5px solid var(--ink); }
+@keyframes portal-spin { to { rotate: 360deg; } }
+.portal-text { position: relative; display: grid; gap: 12px; justify-items: center; text-align: center; max-width: 64%; }
+.portal-text strong { font: 400 clamp(1.5rem, 4vw, 2.1rem)/1.05 var(--font-display); color: var(--acid); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; }
+.portal-text > span:not(.btn) { font-size: 0.95rem; color: var(--muted); }
+.portal:hover .portal-ring { animation-duration: 3s; }
 
 /* Game room page: the game's own fonts/colours over its own haze, framed in den ink. */
 .game-room { position: relative; }

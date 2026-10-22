@@ -1,34 +1,68 @@
 ---
 import Room from '../layouts/Room.astro';
+import Prop from '../components/Prop.astro';
 import { links } from '../data/links';
+
+// Notes pinned to the door. Positions are % of the door on wide screens; phones stack them.
+const notes = [
+  { label: 'Email', text: links.email, href: `mailto:${links.email}`, x: '10%', y: '30%', tilt: -5 },
+  ...links.socials.map((s, i) => ({
+    label: s.label,
+    text: s.href.replace('https://', ''),
+    href: s.href,
+    x: ['58%', '24%'][i % 2],
+    y: ['42%', '64%'][i % 2],
+    tilt: [4, -2][i % 2],
+  })),
+];
 ---
 
 <Room title="Front Door | Gnoblin's Den">
-  <section class="room den">
+  <section class="room door-room">
     <div class="wrap">
-      <header>
+      <header class="room-head">
         <h1 class="display">Front Door</h1>
-        <p class="lede">Knock knock. Find players, report bugs, or just say hi.</p>
+        <p class="lede ink-note">Knock knock. Find people to play with, report bugs, or just say hi.</p>
       </header>
 
-      <a class="discord-block" href={links.discord}>
-        <h2>Join the Den on Discord</h2>
-        <p>Find people to play with, catch playtests first, and watch us break things in real time.</p>
-        <span class="btn">Join the Discord →</span>
-      </a>
+      <div class="door-scene">
+        <div class="door">
+          <svg class="door-art" viewBox="0 0 400 440" aria-hidden="true">
+            <path d="M10 440 V200 C10 90 95 10 200 10 C305 10 390 90 390 200 V440Z" fill="#3f6b1f" stroke="#121014" stroke-width="6" />
+            <path d="M40 440 V205 C40 110 112 40 200 40 C288 40 360 110 360 205 V440Z" fill="#7a4a2a" stroke="#121014" stroke-width="6" />
+            <g stroke="#121014" stroke-width="4" fill="none"><path d="M110 60 V440 M160 44 V440 M200 40 V440 M240 44 V440 M290 60 V440" /></g>
+            <g stroke="#121014" stroke-width="5" fill="#4a4458"><rect x="40" y="150" width="70" height="20" rx="4" /><rect x="40" y="330" width="70" height="20" rx="4" /></g>
+            <circle cx="200" cy="120" r="22" fill="#121014" />
+            <circle cx="192" cy="118" r="4" fill="#f5ff3d" /><circle cx="208" cy="118" r="4" fill="#f5ff3d" />
+            <circle cx="300" cy="260" r="18" fill="none" stroke="#c99a16" stroke-width="7" />
+            <circle cx="300" cy="244" r="7" fill="#c99a16" stroke="#121014" stroke-width="3" />
+            <path d="M14 230 C30 210 40 240 54 220 M346 214 C360 236 372 206 386 226 M60 70 C80 60 90 80 108 64" stroke="#86c43a" stroke-width="7" fill="none" stroke-linecap="round" />
+          </svg>
+          <ul class="door-notes">
+            {
+              notes.map((n) => (
+                <li style={`--x:${n.x};--y:${n.y};--tilt:${n.tilt}deg`}>
+                  <a href={n.href}>
+                    <strong>{n.label}</strong>
+                    <span>{n.text}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <Prop name="mushroom-cluster" x="-8%" y="78%" size={90} hideSmall />
+          <Prop name="mushroom-tall" x="88%" y="74%" size={84} hideSmall />
+        </div>
 
-      <ul class="contact-list">
-        <li>
-          <a href={`mailto:${links.email}`}><strong>Email</strong><span>{links.email}</span></a>
-        </li>
-        {
-          links.socials.map((s) => (
-            <li>
-              <a href={s.href}><strong>{s.label}</strong><span>{s.href.replace('https://', '')}</span></a>
-            </li>
-          ))
-        }
-      </ul>
+        <a class="portal" href={links.discord}>
+          <span class="portal-ring" aria-hidden="true"></span>
+          <span class="portal-text">
+            <strong>Join the Den on Discord</strong>
+            <span>Find people to play with, catch playtests first, and watch us break things in real time.</span>
+            <span class="btn">Step through →</span>
+          </span>
+        </a>
+      </div>
     </div>
   </section>
 </Room>
